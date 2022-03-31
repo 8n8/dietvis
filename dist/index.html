@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="elm.js"></script>
+</head>
+
+<body>
+    <div id="myapp"></div>
+</body>
+
+<script type="text/javascript">
+var app = Elm.Main.init({
+    node: document.getElementById('myapp')
+});
+
+
+app.ports.elmToJs.subscribe(function(message) {
+    switch (message.key) {
+    case 'set':
+        localStorage.setItem('data', message.value);
+        break;
+    case 'get':
+        app.ports.jsToElm.send(localStorage.getItem('data'));
+    }
+});
+</script>
+
+</html>
