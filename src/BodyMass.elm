@@ -1,11 +1,11 @@
-module BodyWeight exposing (BodyWeight, decode)
+module BodyMass exposing (BodyMass, decode)
 
 
 import Json.Decode as Decode exposing (Decoder)
 
 
-type BodyWeight
-    = BodyWeight Int
+type BodyMass
+    = BodyMass Int
 
 
 maxWeight : Int
@@ -18,7 +18,7 @@ minWeight =
     1000
 
 
-decode : Decoder BodyWeight
+decode : Decoder BodyMass
 decode =
     Decode.int
         |> Decode.andThen (\raw ->
@@ -30,7 +30,7 @@ decode =
                     Decode.succeed ok)
 
 
-fromInt : Int -> Result String BodyWeight
+fromInt : Int -> Result String BodyMass
 fromInt i =
             if i < minWeight then
                 Err "body weight too low"
@@ -39,5 +39,5 @@ fromInt i =
                 Err "body weight too high"
 
             else
-                Ok (BodyWeight i)
+                Ok (BodyMass i)
                 

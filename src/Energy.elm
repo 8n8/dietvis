@@ -1,4 +1,4 @@
-module Energy exposing (Energy, fromKcal, toInt, max_, min_, toKcal, sum)
+module Energy exposing (Energy, fromKcal, toInt, max_, min_, toKcal, sum, fromInt)
 
 
 import Bitwise

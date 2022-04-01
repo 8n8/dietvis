@@ -1,14 +1,17 @@
 port module Main exposing (main)
 
 
-import BodyWeights exposing (BodyWeights)
+import BodyMasses exposing (BodyMasses)
 import Element.Font as Font
 import Waists exposing (Waists)
+import Energy exposing (Energy)
+import MealMass exposing (MealMass)
+import FoodName exposing (FoodName)
+import Element.Input as Input
 import Meals exposing (Meals)
-import Foods exposing (Foods)
+import Foods exposing (Foods, Food)
+import EnergyPerMass exposing (EnergyPerMass)
 import Time_ exposing (Time_)
-import FoodEnergyRate exposing (FoodEnergyRate)
-import MealEnergy exposing (MealEnergy)
 import Meal exposing (Meal)
 import Element exposing (Element)
 import Json.Encode as Encode
@@ -21,12 +24,22 @@ import Chart.Attributes as Attributes
 
 
 port elmToJs : Encode.Value -> Cmd msg
-port jsToElm : (Decode.Value -> Msg) -> Sub msg
 
 
 getLocalStorageData : Encode.Value
 getLocalStorageData =
     Encode.object [ ( "key", Encode.null ) ]
+
+
+calculateEnergy : MealMass -> EnergyPerMass -> Result String Energy
+calculateEnergy mass rate =
+    let
+        ratio : Int
+        ratio =
+            MealMass.toInt mass //
+                MealMass.toInt (EnergyPerMass.mass rate)
+    in
+        Energy.fromInt (ratio * EnergyPerMass.energy rate)
 
 
 type Model
@@ -41,7 +54,7 @@ type alias OkModel =
         , bodyWeightBox : String
         , waistBox : String
         , meals : Meals
-        , weights : BodyWeights
+        , weights : BodyMasses
         , waists : Waists
         , foods : Foods
         , now : Time_
@@ -78,12 +91,12 @@ onUrlRequest url =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    jsToElm decodeFromJs
+    Sub.none
 
 
 type alias LocalStorage =
     { meals : Meals
-    , weights : BodyWeights
+    , weights : BodyMasses
     , waists : Waists
     , foods : Foods
     }
@@ -93,7 +106,7 @@ decodeFromJs : Decoder LocalStorage
 decodeFromJs =
     Decode.map4 LocalStorage
         Meals.decode
-        BodyWeights.decode
+        BodyMasses.decode
         Waists.decode
         Foods.decode
 
@@ -102,6 +115,10 @@ type Msg
     = FromPortOk LocalStorage
     | LinkClick Browser.UrlRequest
     | UrlChange Url
+    | SubmitNewMeal
+    | NewMealWeight String
+    | NewFoodSearch String
+    | SubmitNewFood
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -155,26 +172,28 @@ viewLoaded {foodSearchBox, foodWeightBox, bodyWeightBox, waistBox, meals, weight
         ]
 
 
-viewCalories : FoodEnergyRate -> Element Msg
+viewCalories : EnergyPerMass -> Element Msg
 viewCalories calories =
     Element.paragraph
         []
-        [ Element.el [Font.size 30] (FoodEnergyRate.toString calories)
+        [ Element.el
+            [Font.size 30]
+            (EnergyPerMass.toKcalPer100g calories)
         , Element.text " consumed in the last 24 hours"
         ]
 
 
-caloriesLast24Hours : Meals -> Foods -> Time_ -> MealEnergy
+caloriesLast24Hours : Meals -> Foods -> Time_ -> Energy
 caloriesLast24Hours meals foods now =
     Meals.last24Hours meals now
     |> List.map (caloriesInMeal foods)
-    |> MealEnergy.sum
+    |> Energy.sum
 
 
-caloriesInMeal : Foods -> Meal -> Maybe MealEnergy
+caloriesInMeal : Foods -> Meal -> Maybe Energy
 caloriesInMeal foods meal =
     Foods.getEnergyRate (Meal.foodId meal) foods
-        |> Maybe.map (MealEnergy.calculate (Meal.weight meal))
+        |> Maybe.map (calculateEnergy (Meal.weight meal))
 
 
 addMeal :
@@ -192,7 +211,7 @@ addMeal {searchBox, weightBox, foods} =
             , placeHolder = Nothing
             , label =
                 Element.text "Search for food"
-                |> Element.labelAbove []
+                |> Input.labelAbove []
             }
         , foodSearchResults (Foods.search searchBox foods)
         , Input.text
@@ -201,10 +220,10 @@ addMeal {searchBox, weightBox, foods} =
             , text = weightBox
             , placeHolder = Nothing
             , label =
-                Element.text ("Meal weight in " ++ Meal.units)
-                |> Element.labelAbove []
+                Element.text ("Meal weight in grams")
+                |> Input.labelAbove []
             }
-        , case FoodWeight.fromString weightBox of
+        , case MealMass.fromStringGrams weightBox of
             Err err ->
                 Element.text err
 
@@ -213,12 +232,22 @@ addMeal {searchBox, weightBox, foods} =
         , Input.button
             []
             { onPress =
-                FoodWeight.fromString weightBox 
+                MealMass.fromStringGrams weightBox 
                 |> Result.toMaybe
                 |> Maybe.map (\_ -> SubmitNewMeal)
             , label = Element.text "Submit meal"
             }
         ]
+
+
+foodSearchResults : List Food -> Element Msg
+foodSearchResults =
+    List.map foodSearchResult >> Element.column []
+
+
+foodSearchResult : Food -> Element Msg
+foodSearchResult {name} =
+    Element.text (FoodName.toString name)
 
 
 addFood : Foods -> String -> String -> Element Msg

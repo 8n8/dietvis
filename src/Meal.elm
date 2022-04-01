@@ -1,19 +1,24 @@
-module Meal exposing (Meal, weight)
+module Meal exposing (Meal, weight, foodId)
 
 
 import Time_ exposing (Time_)
-import MealWeight exposing (MealWeight)
-import FoodId exposing (FoodId)
+import MealMass exposing (MealMass)
+import Foods exposing (FoodId)
 
 
 type Meal
     = Meal
         { timestamp : Time_
-        , weight : MealWeight
+        , weight : MealMass
         , foodId : FoodId
         }
 
 
-weight : Meal -> MealWeight
+weight : Meal -> MealMass
 weight (Meal meal) =
     meal.weight
+
+
+foodId : Meal -> FoodId
+foodId (Meal meal) =
+    meal.foodId

@@ -3,8 +3,8 @@ module Meals exposing (Meals, decode, last24Hours)
 
 import Array exposing (Array)
 import Time_ exposing (Time_)
-import MealWeight exposing (MealWeight)
-import FoodId exposing (FoodId)
+import MealMass exposing (MealMass)
+import Foods exposing (FoodId)
 import Json.Decode as Decode exposing (Decoder)
 
 
@@ -14,7 +14,7 @@ type Meals
 
 type alias Unwrapped =
     { timestamps : Array Time_
-    , weights : Array MealWeight
+    , weights : Array MealMass
     , foodIds : Array FoodId
     }
 
@@ -55,8 +55,8 @@ decode : Decoder Meals
 decode =
     Decode.map3 Unwrapped
         (Decode.field "timestamps" (Decode.array Time_.decode))
-        (Decode.field "weights" (Decode.array MealWeight.decode))
-        (Decode.field "foodids" (Decode.array FoodId.decode))
+        (Decode.field "weights" (Decode.array MealMass.decode))
+        (Decode.field "foodids" (Decode.array Foods.decodeId))
         |> Decode.andThen (\r ->
             if Array.length r.timestamps == Array.length r.weights &&
                 Array.length r.timestamps == Array.length r.foodIds
