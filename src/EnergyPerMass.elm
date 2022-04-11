@@ -1,9 +1,10 @@
-module EnergyPerMass exposing (EnergyPerMass, fromKcalPer100g, greaterThan, lessThan, decode, toKcalPer100g, mass, energy)
+module EnergyPerMass exposing (EnergyPerMass, fromKcalPer100g, greaterThan, lessThan, decode, toKcalPer100g, mass, energy, encode)
 
 
 import Energy exposing (Energy)
 import MealMass exposing (MealMass)
 import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
 
 
 type EnergyPerMass
@@ -25,11 +26,16 @@ toKcalPer100g (EnergyPerMass e m) =
     String.fromInt (Energy.toKcal e // MealMass.toHectoGram m)
 
 
-fromKcalPer100g : Int -> Result String EnergyPerMass
+fromKcalPer100g : String -> Result String EnergyPerMass
 fromKcalPer100g raw =
-    Result.map
-        (\e -> EnergyPerMass e MealMass.hundredGrams)
-        (Energy.fromKcal raw)
+    case String.toInt raw of
+        Nothing ->
+            Err "not a number"
+
+        Just n ->
+            Result.map
+                (\e -> EnergyPerMass e MealMass.hundredGrams)
+                (Energy.fromKcal n)
 
 
 greaterThan : EnergyPerMass -> EnergyPerMass -> Bool
@@ -45,6 +51,11 @@ lessThan a b =
 toInt : EnergyPerMass -> Int
 toInt (EnergyPerMass e m) =
     Energy.toInt e // MealMass.toInt m
+
+
+encode : EnergyPerMass -> Encode.Value
+encode energyPerMass =
+    Encode.int (toInt energyPerMass)
 
 
 decode : Decoder EnergyPerMass

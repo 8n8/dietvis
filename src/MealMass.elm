@@ -1,7 +1,8 @@
-module MealMass exposing (MealMass, decode, toHectoGram, hundredGrams, toInt, fromInt, fromStringGrams)
+module MealMass exposing (MealMass, decode, toHectoGram, hundredGrams, toInt, fromInt, fromStringGrams, encode)
 
 
 import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
 
 
 -- g
@@ -29,6 +30,11 @@ decode =
 
                 Ok ok ->
                     Decode.succeed ok)
+
+
+encode : MealMass -> Encode.Value
+encode (MealMass m) =
+    Encode.int m
 
 
 max_ : Int

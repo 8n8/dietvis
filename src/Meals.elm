@@ -1,35 +1,56 @@
-module Meals exposing (Meals, decode, last24Hours)
+module Meals exposing (Meals, decode, last24Hours, insert, encode)
 
 
 import Array exposing (Array)
 import Time_ exposing (Time_)
 import MealMass exposing (MealMass)
-import Foods exposing (FoodId)
+import Meal exposing (Meal, encode, decode)
+import Food exposing (Food)
 import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
 
 
 type Meals
-    = Meals Unwrapped
+    = Meals (List Meal)
 
 
-type alias Unwrapped =
-    { timestamps : Array Time_
-    , weights : Array MealMass
-    , foodIds : Array FoodId
+type alias Insert =
+    { time : Time_
+    , oldMeals : Meals
+    , food : Food 
+    , mass : String
     }
 
 
-last24Hours : Meals -> Time_ -> Meals
-last24Hours (Meals {timestamps, weights, foodIds}) now =
-    let
-        i : Int
-        i = getFirstIndex timestamps now
-    in
-        { timestamps = Array.slice i -1 timestamps
-        , weights = Array.slice i -1 weights
-        , foodIds = Array.slice i -1 foodIds
-        }
-        |> Meals
+insert : Insert -> Result String Meals
+insert {time, oldMeals, food, mass} =
+    case MealMass.fromStringGrams mass of
+        Err err ->
+            Err err
+
+        Ok okMass -> 
+            let
+                (Meals unwrapped) = oldMeals 
+            in
+            Meal.new time okMass food :: unwrapped
+            |> Meals |> Ok
+
+
+last24Hours : Time_ -> Meals -> Meals
+last24Hours now =
+    unwrap
+        >> List.filter (last24HoursFilter now)
+        >> Meals
+
+
+unwrap : Meals -> List Meal
+unwrap (Meals m) =
+    m
+
+
+last24HoursFilter : Time_ -> Meal -> Bool
+last24HoursFilter now meal =
+    Time_.greaterThan (Meal.time meal) (Time_.floorMinus now Time_.day)
 
 
 getFirstIndex : Array Time_ -> Time_ -> Int
@@ -53,16 +74,9 @@ getFirstIndexHelp remaining now i =
 
 decode : Decoder Meals
 decode =
-    Decode.map3 Unwrapped
-        (Decode.field "timestamps" (Decode.array Time_.decode))
-        (Decode.field "weights" (Decode.array MealMass.decode))
-        (Decode.field "foodids" (Decode.array Foods.decodeId))
-        |> Decode.andThen (\r ->
-            if Array.length r.timestamps == Array.length r.weights &&
-                Array.length r.timestamps == Array.length r.foodIds
-            then
-                Decode.succeed (Meals r)
+    Decode.list Meal.decode |> Decode.map Meals
 
-            else
-                Decode.fail "must have equal numbers of weights, timestamps and food IDs")
-                
+
+encode : Meals -> Encode.Value
+encode (Meals meals) =
+    Encode.list Meal.encode meals

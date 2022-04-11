@@ -1,26 +1,30 @@
 port module Main exposing (main)
 
 
-import BodyMasses exposing (BodyMasses)
+import BodySeries exposing (BodySeries)
 import Element.Font as Font
-import Waists exposing (Waists)
+import WaistSeries exposing (WaistSeries)
 import Energy exposing (Energy)
 import MealMass exposing (MealMass)
-import FoodName exposing (FoodName)
+import Name exposing (Name)
 import Element.Input as Input
+import BodyMass exposing (BodyMass)
 import Meals exposing (Meals)
-import Foods exposing (Foods, Food)
+import Meal exposing (Meal)
+import Foods exposing (Foods)
+import Food exposing (Food)
 import EnergyPerMass exposing (EnergyPerMass)
 import Time_ exposing (Time_)
-import Meal exposing (Meal)
 import Element exposing (Element)
 import Json.Encode as Encode
+import Waist exposing (Waist)
 import Json.Decode as Decode exposing (Decoder)
 import Browser
 import Browser.Navigation as Navigation
 import Url exposing (Url)
 import Chart
 import Chart.Attributes as Attributes
+import Time
 
 
 port elmToJs : Encode.Value -> Cmd msg
@@ -43,24 +47,35 @@ calculateEnergy mass rate =
 
 
 type Model
-    = LoadingLocalStorage
-    | Fatal String
-    | LoadedLocalStorage OkModel
+    = Fatal String
+    | Valid OkModel
 
 
 type alias OkModel =
-        { foodSearchBox : String
-        , foodWeightBox : String
-        , bodyWeightBox : String
-        , waistBox : String
-        , meals : Meals
-        , weights : BodyMasses
-        , waists : Waists
-        , foods : Foods
-        , now : Time_
-        , newFoodNameBox : String
-        , newFoodCaloriesBox : String
-        }
+    { foodSearchBox : String
+    , mealWeightBox : String
+    , selectedFood : Maybe Food
+    , bodyWeightBox : String
+    , waistBox : String
+    , meals : Meals
+    , weights : BodySeries
+    , waists : WaistSeries
+    , foods : Foods
+    , now : Maybe Time_
+    , newFoodNameBox : String
+    , newFoodCaloriesBox : String
+    }
+
+
+dataDump : OkModel -> Cmd Msg
+dataDump {meals, weights, waists, foods} =
+        [ ( "meals", Meals.encode meals )
+        , ( "weights", BodySeries.encode weights )
+        , ( "waists", WaistSeries.encode waists )
+        , ( "foods", Foods.encode foods )
+        ]
+        |> Encode.object
+        |> elmToJs
 
 
 main =
@@ -74,9 +89,53 @@ main =
         }
 
 
-init : () -> Url -> Navigation.Key -> (Model, Cmd Msg)
-init _ _ _ =
-    (LoadingLocalStorage, elmToJs getLocalStorageData)
+init : Decode.Value -> Url -> Navigation.Key -> (Model, Cmd Msg)
+init flags _ _ =
+    case Decode.decodeValue cacheDecoder flags of
+        Err err ->
+            ( Fatal (Decode.errorToString err)
+            , Cmd.none
+            )
+
+        Ok {meals, weights, waists, foods} ->
+            ( { foodSearchBox = ""
+              , mealWeightBox = ""
+              , selectedFood = Nothing
+              , bodyWeightBox = ""
+              , waistBox = ""
+              , meals = meals
+              , weights = weights
+              , waists = waists
+              , foods = foods
+              , now = Nothing
+              , newFoodNameBox = ""
+              , newFoodCaloriesBox = ""
+              }
+            , Time.now
+            )
+
+
+type alias Flags =
+    { now : Time_
+    , cache : Cache
+    }
+
+
+type alias Cache =
+    { meals : Meals
+    , weights : BodySeries
+    , waists : WaistSeries
+    , foods : Foods
+    }
+
+
+cacheDecoder : Decoder Cache
+cacheDecoder =
+    Decode.map4 Cache
+        (Decode.field "meals" Meals.decode)
+        (Decode.field "weights" BodySeries.decode)
+        (Decode.field "waists" WaistSeries.decode)
+        (Decode.field "foods" Foods.decode)
 
 
 onUrlChange : Url -> Msg
@@ -91,13 +150,13 @@ onUrlRequest url =
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Time.every (60*1000) TimeNow
 
 
 type alias LocalStorage =
     { meals : Meals
-    , weights : BodyMasses
-    , waists : Waists
+    , weights : BodySeries
+    , waists : WaistSeries
     , foods : Foods
     }
 
@@ -106,36 +165,62 @@ decodeFromJs : Decoder LocalStorage
 decodeFromJs =
     Decode.map4 LocalStorage
         Meals.decode
-        BodyMasses.decode
-        Waists.decode
+        BodySeries.decode
+        WaistSeries.decode
         Foods.decode
 
 
 type Msg
-    = FromPortOk LocalStorage
-    | LinkClick Browser.UrlRequest
+    = LinkClick Browser.UrlRequest
     | UrlChange Url
     | SubmitNewMeal
     | NewMealWeight String
     | NewFoodSearch String
     | SubmitNewFood
+    | NewFoodCaloriesBox String
+    | NewFoodNameBox String
+    | SubmitBodyWeight
+    | NewBodyWeightBox String
+    | SubmitWaist
+    | NewWaistBox String
+    | TimeNow Time.Posix
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-    case msg of
-        FromPortOk {meals, weights, waists} ->
+    case model of
+        Fatal err ->
+            (model, Cmd.none)
 
-                    ( LoadedLocalStorage
-                        { foodSearchBox = ""
-                        , weightBox = ""
-                        , waistBox = ""
-                        , meals = meals
-                        , weights = weights
-                        , waists = waists
-                        }
-                    , Cmd.none
-                    )
+        Valid valid ->
+            updateOk msg valid
+
+
+updateOk : Msg -> OkModel -> (Model, Cmd Msg)
+updateOk msg model =
+    case msg of
+        LinkClick _ ->
+            (Valid model, Cmd.none)
+
+        UrlChange _ ->
+            (Valid model, Cmd.none)
+
+        SubmitNewMeal ->
+            let
+                newModel : OkModel
+                newModel =
+                    { model
+                      | meals =
+                          Meals.insert
+                              { time = model.now
+                              , oldMeals = model.meals
+                              , food = model.selectedFood
+                              , mass = model.mealWeightBox
+                              }
+                              |> Result.withDefault model.meals
+                    }
+            in
+                (Valid newModel, dataDump model)
 
 
 view : Model -> Browser.Document Msg
@@ -148,22 +233,19 @@ view model =
 viewElement : Model -> Element Msg
 viewElement model =
     case model of
-        LoadingLocalStorage ->
-            Element.text "Loading..."
+        Valid ok ->
+            viewOk ok
 
         Fatal err ->
             Element.text ("Fatal error: " ++ err)
 
-        LoadedLocalStorage loaded ->
-            viewLoaded loaded
 
-
-viewLoaded : OkModel -> Element Msg
-viewLoaded {foodSearchBox, foodWeightBox, bodyWeightBox, waistBox, meals, weights, waists, foods, now, newFoodNameBox, newFoodCaloriesBox} =
+viewOk : OkModel -> Element Msg
+viewOk {foodSearchBox, mealWeightBox, bodyWeightBox, waistBox, meals, weights, waists, foods, now, newFoodNameBox, newFoodCaloriesBox} =
     Element.column
         []
         [ viewCalories (caloriesLast24Hours meals foods now)
-        , addMeal foodSearchBox foodWeightBox foods meals
+        , addMeal foodSearchBox mealWeightBox foods meals
         , addFood foods newFoodNameBox newFoodCaloriesBox
         , addWaist waistBox
         , addWeight bodyWeightBox
@@ -178,7 +260,7 @@ viewCalories calories =
         []
         [ Element.el
             [Font.size 30]
-            (EnergyPerMass.toKcalPer100g calories)
+            (Element.text <| EnergyPerMass.toKcalPer100g calories)
         , Element.text " consumed in the last 24 hours"
         ]
 
@@ -192,8 +274,8 @@ caloriesLast24Hours meals foods now =
 
 caloriesInMeal : Foods -> Meal -> Maybe Energy
 caloriesInMeal foods meal =
-    Foods.getEnergyRate (Meal.foodId meal) foods
-        |> Maybe.map (calculateEnergy (Meal.weight meal))
+    (Food.energyPerMass (Meal.food meal))
+        |> Maybe.map (calculateEnergy (Meal.mass meal))
 
 
 addMeal :
@@ -246,8 +328,8 @@ foodSearchResults =
 
 
 foodSearchResult : Food -> Element Msg
-foodSearchResult {name} =
-    Element.text (FoodName.toString name)
+foodSearchResult =
+    Food.name >> Name.toString >> Element.text
 
 
 addFood : Foods -> String -> String -> Element Msg
@@ -260,15 +342,14 @@ addFood foods nameBox caloriesBox =
             , text = nameBox
             , placeHolder = Nothing
             , label =
-                Element.text "Name of new food"
-                |> Element.labelAbove []
+                Element.text "Name of new food" |> Input.labelAbove []
             }
         , Input.text
             []
             { onChange = NewFoodCaloriesBox
             , text = caloriesBox
             , placeHolder = Nothing
-            , label = Element.text ("Calories in " ++ Calories.units)
+            , label = Element.text "Calories in kCal per 100g"
             }
         , case Foods.insert nameBox caloriesBox foods of
             Err err ->
@@ -293,23 +374,23 @@ addWeight weightBox =
         []
         [ Input.text
             []
-            { onChange = NewWeightBox
+            { onChange = NewBodyWeightBox
             , text = weightBox
             , placeHolder = Nothing
             , label =
-                ("Body weight in " ++ BodyWeight.units)
+                "Body weight in kg"
                 |> Element.text
-                |> Element.labelAbove []
+                |> Input.labelAbove []
             }
         , Input.button
             []
             { onPress =
-                BodyWeight.fromString weightBox
+                BodyMass.fromStringKg weightBox
                 |> Result.toMaybe
-                |> Maybe.map (\_ -> SubmitWeight)
+                |> Maybe.map (\_ -> SubmitBodyWeight)
             , label = Element.text "Submit body weight"
             }
-        , case BodyWeight.fromString weightBox of
+        , case BodyMass.fromStringKg weightBox of
             Err err ->
                 Element.text err
 
@@ -328,16 +409,16 @@ addWaist waistBox =
             , text = waistBox
             , placeHolder = Nothing
             , label =
-                ("Waist measurement in " ++ Waist.units)
+                "Waist measurement in cm"
                 |> Element.text
-                |> Element.labelAbove []
+                |> Input.labelAbove []
             }
         , Input.button
             []
             { onPress = Just SubmitWaist
             , label = Element.text "Submit waist measurement"
             }
-        , case Waist.fromString waistBox of
+        , case Waist.fromStringCm waistBox of
             Err err ->
                 Element.text err
 
@@ -346,7 +427,7 @@ addWaist waistBox =
         ]
 
 
-weightChart : Weights -> Element Msg
+weightChart : BodySeries -> Element Msg
 weightChart weights =
     Chart.chart
         [ Attributes.height 300
@@ -355,24 +436,24 @@ weightChart weights =
         [ Chart.xLabels [ Attributes.withGrid ]
         , Chart.yLabels [ Attributes.withGrid ]
         , Chart.series
-            .x
-            [ Chart.scatter .y [] ]
-            (Weights.series weights)
+            .time
+            [ Chart.scatter .mass [] ]
+            (BodySeries.series weights)
         ]
         |> Element.html
 
 
-waistChart : Waists -> Element Msg
+waistChart : WaistSeries -> Element Msg
 waistChart waists =
     Chart.chart
-        [ Attribute.height 300
-        , Attribute.width 600
+        [ Attributes.height 300
+        , Attributes.width 600
         ]
         [ Chart.xLabels [ Attributes.withGrid ]
         , Chart.yLabels [ Attributes.withGrid ]
         , Chart.series
-            .x
-            [ Chart.scatter .y [] ]
-            (Waists.series waists)
+            .time
+            [ Chart.scatter .length [] ]
+            (WaistSeries.series waists)
         ]
         |> Element.html

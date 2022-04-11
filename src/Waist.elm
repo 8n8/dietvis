@@ -1,21 +1,38 @@
-module Waist exposing (Waist, decode)
+module Waist exposing (Waist, decode, fromStringCm, toInt, toFloat, encode)
 
 
 import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
 
 
+-- cm
 type Waist
     = Waist Int
 
 
+toInt : Waist -> Int
+toInt (Waist w) =
+    w
+
+
+toFloat : Waist -> Float
+toFloat (Waist l) =
+    Basics.toFloat l
+
+
 minWaist : Int
 minWaist =
-    200
+    10
 
 
 maxWaist : Int
 maxWaist =
-    5000
+    300
+
+
+encode : Waist -> Encode.Value
+encode (Waist l) =
+    Encode.int l
 
 
 decode : Decoder Waist
@@ -40,3 +57,13 @@ fromInt i =
 
     else
         Ok (Waist i)
+
+
+fromStringCm : String -> Result String Waist
+fromStringCm raw =
+    case String.toInt raw of
+        Nothing ->
+            Err "not a number"
+
+        Just cm ->
+            fromInt cm

@@ -13,11 +13,13 @@
 <script type="text/javascript">
 var app = Elm.Main.init({
     node: document.getElementById('myapp'),
-    flags: localStorage.getItem('data')
+    flags:
+        {'cache': localStorage.getItem('cache'),
+         'now': Date.now()};
 });
 
 app.ports.elmToJs.subscribe(function(message) {
-    localStorage.setItem('data', message);
+    localStorage.setItem('cache', message);
 });
 </script>
 
