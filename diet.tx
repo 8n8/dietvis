@@ -1,5 +1,6 @@
 title { `Diet` }
 author { `True Ghiassi` }
+date { `12 April 2022` }
 body {
 header 1 x { `Introduction` }
 `Diet is a computer program for tracking meals and body measurements. Its purpose is to help me lose weight by reducing calorie consumption.`
@@ -22,6 +23,16 @@ p
 `It needs to store foods that I have entered, so that I can easily reuse them without looking up the calories again. It should have common food definitions built in.`
 p
 `I need to be able to view charts of my weight and waist measurements, and also of the 5-day running average of these measurements, as they fluctuate a lot from day to day.`
+
+header 1 x { `Sketchs of user interface` }
+
+`The top part of the user interface is for viewing the total calories consumed in the last 24 hours, and for entering data.`
+
+image uiTop `0.7` { `Sketch of top part of the interface` } `guitop.png`
+
+`The lower part of the user interface contains charts of the data and buttons for downloading and uploading it.`
+
+image uiBottom `0.7` { `Sketch of lower part of the interface` } `guibottom.png`
 
 header 1 x { `Data storage` }
 `The stored data is:`
