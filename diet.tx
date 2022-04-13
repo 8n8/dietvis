@@ -54,11 +54,13 @@ bullets {
 }
 `The meals are an Elm record of three equal length arrays, with the integer ID as the index. Meals can be added, removed or modified.`
 p
-`The size of a meal should be ` math { 3 * 8 = 24 ` bytes` } `, although perhaps Elm / JS adds some extra overhead. That is, four 8-byte integers.`
+`The size of a meal should be ` math { 3 * 8 = 24 ` bytes` } `, although perhaps Elm / JS adds some extra overhead. That is, three 8-byte integers. (Not four, because the ID is the array index.)`
 p
 `The set of meals can be empty, and can be created by adding them one at a time, or by decoding them from store.`
 p
 `The meal set can be used to calculate the number of calories consumed in the last 24 hours.`
+p
+`The meal set should be viewable as a chart showing time on the ` math { x } `-axis, and daily calories on the ` math { y } `-axis.`
 
 header 1 x { `Foods` }
 `A food is a name and the calorie rate for the food. No two foods can have the same name.`
