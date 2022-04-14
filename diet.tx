@@ -24,7 +24,7 @@ p
 p
 `I need to be able to view charts of my weight and waist measurements, and also of the 5-day running average of these measurements, as they fluctuate a lot from day to day.`
 
-header 1 x { `Sketchs of user interface` }
+header 1 uiSketch { `Sketches of user interface` }
 
 `The top part of the user interface is for viewing the total calories consumed in the last 24 hours, and for entering data.`
 
@@ -158,4 +158,47 @@ Math {
 equation { 100 * 365 * 24 = 876000 }
 }
 `Time can be created only by an Elm task or from a decoder. So measurements must be entered as they happen, and time fields can't be edited.`
+
+header 1 x { `Internal state` }
+`The internal state of the app is either an error or valid. The valid state is:`
+bullets {
+{ `the meals that have been eaten` }
+{ `the contents of the food search box` }
+{ `the foods details the user has created` }
+{ `the currently selected food` }
+{ `the contents of the meal weight box` }
+{ `the contents of the new food name box` }
+{ `the contents of the new food calories box` }
+{ `the contents of the body weight box` }
+{ `the contents of the waist size box` }
+{ `body weight records` }
+{ `waist size records` }
+}
+
+header 1 x { `Inputs` }
+`The inputs to the app are:`
+bullets {
+{ `data file upload` }
+{ `new content in food search box` }
+{ `click on a food search result` }
+{ `new content in meal weight box` }
+{ `click on "Submit meal'' button` }
+{ `new content in "new food name'' box` }
+{ `new content in food calories box` }
+{ `click on "Submit new food'' button` }
+{ `new content in body weight box` }
+{ `click on "Submit body weight'' button` }
+{ `new content in waist size box` }
+{ `click on "Submit waist size'' button` }
+{ `click on "Download data'' button` }
+{ `click on "Upload data'' button` }
+}
+
+header 1 x { `Outputs` }
+`The outputs of the app are:`
+bullets {
+{ `data file download` }
+{ `cache the data` }
+{ `the view, see ` ref uiSketch }
+}
 }

@@ -26,10 +26,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="46.497522"
-     inkscape:cy="838.97223"
+     inkscape:cx="252.07501"
+     inkscape:cy="921.98565"
      inkscape:document-units="mm"
-     inkscape:current-layer="g6015"
+     inkscape:current-layer="g2029"
      showgrid="false"
      inkscape:window-width="1294"
      inkscape:window-height="704"
@@ -664,655 +664,657 @@
                      id="g2029"
                      inkscape:export-xdpi="96"
                      inkscape:export-ydpi="96">
-                    <flowRoot
-                       transform="matrix(0.26458332,0,0,0.26458332,16.492251,-554.28592)"
-                       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                       id="flowRoot3713"
-                       xml:space="preserve"><flowRegion
-                         id="flowRegion3715"><rect
-                           y="33.575241"
-                           x="34.345188"
-                           height="54.548252"
-                           width="575.78699"
-                           id="rect3717" /></flowRegion><flowPara
-                         id="flowPara3719"><flowSpan
-   id="flowSpan3725"
-   style="font-size:40px">1480</flowSpan> <flowSpan
-   id="flowSpan3721"
-   style="font-size:26.66666794px">kCal consumed in last 24 hours. </flowSpan></flowPara></flowRoot>                    <g
-                       id="g4646"
-                       transform="translate(16.962409,-548.94052)">
-                      <flowRoot
-                         transform="matrix(0.26458333,0,0,0.26458333,1.6036172,0.12970508)"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         id="flowRoot3756"
-                         xml:space="preserve"><flowRegion
-                           style="font-size:26.66666794px"
-                           id="flowRegion3758"><rect
-                             style="font-size:26.66666794px"
-                             y="88.123482"
-                             x="28.284271"
-                             height="32.324898"
-                             width="183.84779"
-                             id="rect3760" /></flowRegion><flowPara
-                           id="flowPara3762">Food search: </flowPara></flowRoot>                      <flowRoot
-                         xml:space="preserve"
-                         id="flowRoot3766"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         transform="matrix(0.26458333,0,0,0.26458333,1.5900916,-0.01960791)"><flowRegion
-                           id="flowRegion3768"
-                           style="font-size:26.66666794px;stroke:none"><rect
-                             id="rect3770"
-                             width="224.25389"
-                             height="36.365494"
-                             x="228.29448"
-                             y="88.123482"
-                             style="font-size:26.66666794px;stroke:none" /></flowRegion><flowPara
-                           id="flowPara3772"
-                           style="stroke:none">&lt;search string&gt;</flowPara></flowRoot>                      <g
-                         id="g4592"
-                         transform="translate(0.53453907,0.53453858)">
-                        <rect
-                           y="19.57423"
-                           x="56.126598"
-                           height="14.967093"
-                           width="68.420998"
-                           id="rect4589"
-                           style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-                      </g>
-                    </g>
-                    <g
-                       transform="translate(122.85486,-585.82372)"
-                       id="g4671">
-                      <g
-                         id="g4663">
-                        <rect
-                           ry="6.9556437"
-                           y="56.985329"
-                           x="26.18578"
-                           height="15.514905"
-                           width="70.572418"
-                           id="rect4652"
-                           style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-                      </g>
-                      <flowRoot
-                         xml:space="preserve"
-                         id="flowRoot4654"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"><flowRegion
-                           id="flowRegion4656"
-                           style="font-size:26.66666794px"><rect
-                             id="rect4658"
-                             width="214.15234"
-                             height="44.446716"
-                             x="96.97464"
-                             y="235.60574"
-                             style="font-size:26.66666794px" /></flowRegion><flowPara
-                           id="flowPara4660">&lt;food name&gt;</flowPara></flowRoot>                    </g>
-                    <g
-                       id="g4685"
-                       transform="translate(0.78235899,-564.44217)">
-                      <g
-                         id="g4675">
-                        <rect
-                           style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                           id="rect4673"
-                           width="70.572418"
-                           height="15.514905"
-                           x="26.18578"
-                           y="56.985329"
-                           ry="6.9556437" />
-                      </g>
-                      <flowRoot
-                         transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         id="flowRoot4683"
-                         xml:space="preserve"><flowRegion
-                           style="font-size:26.66666794px"
-                           id="flowRegion4679"><rect
-                             style="font-size:26.66666794px"
-                             y="235.60574"
-                             x="96.97464"
-                             height="44.446716"
-                             width="214.15234"
-                             id="rect4677" /></flowRegion><flowPara
-                           id="flowPara4681">&lt;food name&gt;</flowPara></flowRoot>                    </g>
-                    <g
-                       id="g4713"
-                       transform="translate(0.78235899,-543.63558)">
-                      <g
-                         id="g4703">
-                        <rect
-                           style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                           id="rect4701"
-                           width="70.572418"
-                           height="15.514905"
-                           x="26.18578"
-                           y="56.985329"
-                           ry="6.9556437" />
-                      </g>
-                      <flowRoot
-                         transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         id="flowRoot4711"
-                         xml:space="preserve"><flowRegion
-                           style="font-size:26.66666794px"
-                           id="flowRegion4707"><rect
-                             style="font-size:26.66666794px"
-                             y="235.60574"
-                             x="96.97464"
-                             height="44.446716"
-                             width="214.15234"
-                             id="rect4705" /></flowRegion><flowPara
-                           id="flowPara4709">&lt;food name&gt;</flowPara></flowRoot>                    </g>
-                    <g
-                       transform="translate(77.022745,-543.63558)"
-                       id="g4727">
-                      <g
-                         id="g4717">
-                        <rect
-                           ry="6.9556437"
-                           y="56.985329"
-                           x="26.18578"
-                           height="15.514905"
-                           width="70.572418"
-                           id="rect4715"
-                           style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-                      </g>
-                      <flowRoot
-                         xml:space="preserve"
-                         id="flowRoot4725"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"><flowRegion
-                           id="flowRegion4721"
-                           style="font-size:26.66666794px"><rect
-                             id="rect4719"
-                             width="214.15234"
-                             height="44.446716"
-                             x="96.97464"
-                             y="235.60574"
-                             style="font-size:26.66666794px" /></flowRegion><flowPara
-                           id="flowPara4723">&lt;food name&gt;</flowPara></flowRoot>                    </g>
                     <g
                        transform="translate(16.69514,-449.56758)"
                        id="g4749">
                       <g
                          transform="translate(0.26726953,1.0690781)"
                          id="g4772">
-                        <flowRoot
-                           xml:space="preserve"
-                           id="flowRoot4743"
-                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                           transform="matrix(0.26458333,0,0,0.26458333,36.173959,-1.5695012)"><flowRegion
-                             id="flowRegion4739"
-                             style="font-size:26.66666794px;stroke:none"><rect
-                               id="rect4737"
-                               width="224.25389"
-                               height="36.365494"
-                               x="228.29448"
-                               y="88.123482"
-                               style="font-size:26.66666794px;stroke:none" /></flowRegion><flowPara
-                             id="flowPara4741"
-                             style="stroke:none">87</flowPara></flowRoot>                        <g
-                           id="g4747"
-                           transform="translate(35.118406,-1.0153547)">
-                          <g
-                             id="g4783">
-                            <flowRoot
-                               transform="matrix(0.26458333,0,0,0.26458333,-33.514789,-0.55414636)"
-                               style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                               id="flowRoot4735"
-                               xml:space="preserve"><flowRegion
-                                 style="font-size:26.66666794px"
-                                 id="flowRegion4731"><rect
-                                   style="font-size:26.66666794px"
-                                   y="88.123482"
-                                   x="28.284271"
-                                   height="58.588863"
-                                   width="383.858"
-                                   id="rect4729" /></flowRegion><flowPara
-                                 id="flowPara4733">Food weight in grams:</flowPara></flowRoot>                            <rect
-                               style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                               id="rect4745"
-                               width="34.779442"
-                               height="13.906324"
-                               x="56.126598"
-                               y="19.57423" />
-                          </g>
-                        </g>
+                        <g
+                           id="g4783"
+                           transform="translate(35.118406,-1.0153547)" />
                       </g>
                     </g>
                     <g
-                       id="g4797"
-                       transform="translate(123.16575,-487.6243)">
+                       id="g1308"
+                       inkscape:export-xdpi="96"
+                       inkscape:export-ydpi="96">
+                      <flowRoot
+                         xml:space="preserve"
+                         id="flowRoot3713"
+                         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                         transform="matrix(0.26458332,0,0,0.26458332,16.492251,-554.28592)"><flowRegion
+                           id="flowRegion3715"><rect
+                             id="rect3717"
+                             width="575.78699"
+                             height="54.548252"
+                             x="34.345188"
+                             y="33.575241" /></flowRegion><flowPara
+                           id="flowPara3719"><flowSpan
+   style="font-size:40px"
+   id="flowSpan3725">1480</flowSpan> <flowSpan
+   style="font-size:26.66666794px"
+   id="flowSpan3721">kCal consumed in last 24 hours. </flowSpan></flowPara></flowRoot>                      <g
+                         transform="translate(16.962409,-548.94052)"
+                         id="g4646">
+                        <flowRoot
+                           xml:space="preserve"
+                           id="flowRoot3756"
+                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                           transform="matrix(0.26458333,0,0,0.26458333,1.6036172,0.12970508)"><flowRegion
+                             id="flowRegion3758"
+                             style="font-size:26.66666794px"><rect
+                               id="rect3760"
+                               width="183.84779"
+                               height="32.324898"
+                               x="28.284271"
+                               y="88.123482"
+                               style="font-size:26.66666794px" /></flowRegion><flowPara
+                             id="flowPara3762">Food search: </flowPara></flowRoot>                        <flowRoot
+                           transform="matrix(0.26458333,0,0,0.26458333,1.5900916,-0.01960791)"
+                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                           id="flowRoot3766"
+                           xml:space="preserve"><flowRegion
+                             style="font-size:26.66666794px;stroke:none"
+                             id="flowRegion3768"><rect
+                               style="font-size:26.66666794px;stroke:none"
+                               y="88.123482"
+                               x="228.29448"
+                               height="36.365494"
+                               width="224.25389"
+                               id="rect3770" /></flowRegion><flowPara
+                             style="stroke:none"
+                             id="flowPara3772">&lt;search string&gt;</flowPara></flowRoot>                        <g
+                           transform="translate(0.53453907,0.53453858)"
+                           id="g4592">
+                          <rect
+                             style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                             id="rect4589"
+                             width="68.420998"
+                             height="14.967093"
+                             x="56.126598"
+                             y="19.57423" />
+                        </g>
+                      </g>
                       <g
-                         id="g4819">
+                         id="g4671"
+                         transform="translate(122.85486,-585.82372)">
                         <g
-                           id="g4787">
+                           id="g4663">
+                          <rect
+                             style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                             id="rect4652"
+                             width="70.572418"
+                             height="15.514905"
+                             x="26.18578"
+                             y="56.985329"
+                             ry="6.9556437" />
+                        </g>
+                        <flowRoot
+                           transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"
+                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                           id="flowRoot4654"
+                           xml:space="preserve"><flowRegion
+                             style="font-size:26.66666794px"
+                             id="flowRegion4656"><rect
+                               style="font-size:26.66666794px"
+                               y="235.60574"
+                               x="96.97464"
+                               height="44.446716"
+                               width="214.15234"
+                               id="rect4658" /></flowRegion><flowPara
+                             id="flowPara4660">&lt;food name&gt;</flowPara></flowRoot>                      </g>
+                      <g
+                         transform="translate(0.78235899,-564.44217)"
+                         id="g4685">
+                        <g
+                           id="g4675">
                           <rect
                              ry="6.9556437"
                              y="56.985329"
                              x="26.18578"
                              height="15.514905"
                              width="70.572418"
-                             id="rect4785"
+                             id="rect4673"
                              style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
                         </g>
                         <flowRoot
                            xml:space="preserve"
-                           id="flowRoot4795"
+                           id="flowRoot4683"
                            style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                           transform="matrix(0.26458333,0,0,0.26458333,13.527801,-1.2066811)"><flowRegion
-                             id="flowRegion4791"
+                           transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"><flowRegion
+                             id="flowRegion4679"
                              style="font-size:26.66666794px"><rect
-                               id="rect4789"
+                               id="rect4677"
                                width="214.15234"
                                height="44.446716"
                                x="96.97464"
                                y="235.60574"
                                style="font-size:26.66666794px" /></flowRegion><flowPara
-                             id="flowPara4793">Submit meal</flowPara></flowRoot>                      </g>
-                    </g>
-                    <g
-                       transform="translate(16.962409,-426.77425)"
-                       id="g4887">
-                      <flowRoot
-                         transform="matrix(0.26458333,0,0,0.26458333,1.603617,-1.5695011)"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         id="flowRoot4835"
-                         xml:space="preserve"><flowRegion
-                           style="font-size:26.66666794px"
-                           id="flowRegion4831"><rect
-                             style="font-size:26.66666794px"
-                             y="88.123482"
-                             x="28.284271"
-                             height="36.365501"
-                             width="226.2742"
-                             id="rect4829" /></flowRegion><flowPara
-                           id="flowPara4833">New food name:</flowPara></flowRoot>                      <g
-                         id="g4875"
-                         transform="translate(-19.082234)">
-                        <flowRoot
-                           transform="matrix(0.26458333,0,0,0.26458333,36.173959,-1.5695012)"
-                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                           id="flowRoot4827"
-                           xml:space="preserve"><flowRegion
-                             style="font-size:26.66666794px;stroke:none"
-                             id="flowRegion4823"><rect
-                               style="font-size:26.66666794px;stroke:none"
-                               y="88.123482"
-                               x="228.29448"
-                               height="36.365494"
-                               width="224.25389"
-                               id="rect4821" /></flowRegion><flowPara
-                             style="stroke:none"
-                             id="flowPara4825">&lt;food name&gt;</flowPara></flowRoot>                        <rect
-                           y="18.558876"
-                           x="91.245003"
-                           height="14.967093"
-                           width="68.420998"
-                           id="rect4837"
-                           style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-                      </g>
-                    </g>
-                    <g
-                       transform="translate(16.962409,-426.77425)"
-                       id="g4939">
-                      <flowRoot
-                         xml:space="preserve"
-                         id="flowRoot4895"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         transform="matrix(0.26458333,0,0,0.26458333,1.603617,19.597166)"><flowRegion
-                           id="flowRegion4891"
-                           style="font-size:26.66666794px"><rect
-                             id="rect4889"
-                             width="169.70566"
-                             height="36.365501"
-                             x="28.284271"
-                             y="88.123482"
-                             style="font-size:26.66666794px" /></flowRegion><flowPara
-                           id="flowPara4893">kCal / 100g:</flowPara></flowRoot>                      <g
-                         transform="translate(-19.082234,21.166667)"
-                         id="g4907">
+                             id="flowPara4681">&lt;food name&gt;</flowPara></flowRoot>                      </g>
+                      <g
+                         transform="translate(0.78235899,-543.63558)"
+                         id="g4713">
                         <g
-                           id="g4926"
-                           transform="translate(-16.355816)">
-                          <flowRoot
-                             transform="matrix(0.26458333,0,0,0.26458333,35.042467,-1.21493)"
-                             style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                             id="flowRoot4903"
-                             xml:space="preserve"><flowRegion
-                               style="font-size:26.66666794px;stroke:none"
-                               id="flowRegion4899"><rect
-                                 style="font-size:26.66666794px;stroke:none"
-                                 y="88.123482"
-                                 x="228.29448"
-                                 height="36.365494"
-                                 width="224.25389"
-                                 id="rect4897" /></flowRegion><flowPara
-                               style="stroke:none"
-                               id="flowPara4901">200</flowPara></flowRoot>                          <rect
-                             y="18.558876"
-                             x="91.245003"
-                             height="14.432555"
-                             width="29.399647"
-                             id="rect4905"
-                             style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+                           id="g4703">
+                          <rect
+                             ry="6.9556437"
+                             y="56.985329"
+                             x="26.18578"
+                             height="15.514905"
+                             width="70.572418"
+                             id="rect4701"
+                             style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
                         </g>
-                      </g>
-                    </g>
-                    <g
-                       transform="translate(90.740701,-444.94859)"
-                       id="g4953">
-                      <g
-                         transform="translate(8.4989013)"
-                         id="g4943" />
-                      <g
-                         transform="translate(-11.652411,0.53453905)"
-                         id="g4970">
-                        <rect
-                           transform="translate(8.4989009)"
-                           style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                           id="rect4941"
-                           width="74.848724"
-                           height="14.980369"
-                           x="22.97855"
-                           y="57.519867"
-                           ry="6.9556437" />
                         <flowRoot
-                           transform="matrix(0.26458333,0,0,0.26458333,13.527801,-1.2066811)"
+                           xml:space="preserve"
+                           id="flowRoot4711"
                            style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                           id="flowRoot4951"
+                           transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"><flowRegion
+                             id="flowRegion4707"
+                             style="font-size:26.66666794px"><rect
+                               id="rect4705"
+                               width="214.15234"
+                               height="44.446716"
+                               x="96.97464"
+                               y="235.60574"
+                               style="font-size:26.66666794px" /></flowRegion><flowPara
+                             id="flowPara4709">&lt;food name&gt;</flowPara></flowRoot>                      </g>
+                      <g
+                         id="g4727"
+                         transform="translate(77.022745,-543.63558)">
+                        <g
+                           id="g4717">
+                          <rect
+                             style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                             id="rect4715"
+                             width="70.572418"
+                             height="15.514905"
+                             x="26.18578"
+                             y="56.985329"
+                             ry="6.9556437" />
+                        </g>
+                        <flowRoot
+                           transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"
+                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                           id="flowRoot4725"
                            xml:space="preserve"><flowRegion
                              style="font-size:26.66666794px"
-                             id="flowRegion4947"><rect
+                             id="flowRegion4721"><rect
                                style="font-size:26.66666794px"
                                y="235.60574"
                                x="96.97464"
-                               height="53.073112"
-                               width="272.14517"
-                               id="rect4945" /></flowRegion><flowPara
-                             id="flowPara4949">Submit new food</flowPara></flowRoot>                      </g>
-                    </g>
-                    <g
-                       id="g5039"
-                       transform="translate(16.962409,-384.44089)">
+                               height="44.446716"
+                               width="214.15234"
+                               id="rect4719" /></flowRegion><flowPara
+                             id="flowPara4723">&lt;food name&gt;</flowPara></flowRoot>                      </g>
+                      <flowRoot
+                         transform="matrix(0.26458333,0,0,0.26458333,53.136369,-450.06801)"
+                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                         id="flowRoot4743"
+                         xml:space="preserve"><flowRegion
+                           style="font-size:26.66666794px;stroke:none"
+                           id="flowRegion4739"><rect
+                             style="font-size:26.66666794px;stroke:none"
+                             y="88.123482"
+                             x="228.29448"
+                             height="36.365494"
+                             width="224.25389"
+                             id="rect4737" /></flowRegion><flowPara
+                           style="stroke:none"
+                           id="flowPara4741">87</flowPara></flowRoot>                      <flowRoot
+                         transform="matrix(0.26458333,0,0,0.26458333,18.566026,-450.068)"
+                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                         id="flowRoot4735"
+                         xml:space="preserve"><flowRegion
+                           style="font-size:26.66666794px"
+                           id="flowRegion4731"><rect
+                             style="font-size:26.66666794px"
+                             y="88.123482"
+                             x="28.284271"
+                             height="58.588863"
+                             width="383.858"
+                             id="rect4729" /></flowRegion><flowPara
+                           id="flowPara4733">Meal weight in grams:</flowPara></flowRoot>                      <rect
+                         style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                         id="rect4745"
+                         width="34.779442"
+                         height="13.906324"
+                         x="56.126598"
+                         y="19.57423"
+                         transform="translate(52.080816,-449.51385)" />
                       <g
-                         transform="translate(0,-2.1381563)"
-                         id="g5059">
+                         transform="translate(123.16575,-487.6243)"
+                         id="g4797">
+                        <g
+                           id="g4819">
+                          <g
+                             id="g4787">
+                            <rect
+                               style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                               id="rect4785"
+                               width="70.572418"
+                               height="15.514905"
+                               x="26.18578"
+                               y="56.985329"
+                               ry="6.9556437" />
+                          </g>
+                          <flowRoot
+                             transform="matrix(0.26458333,0,0,0.26458333,13.527801,-1.2066811)"
+                             style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                             id="flowRoot4795"
+                             xml:space="preserve"><flowRegion
+                               style="font-size:26.66666794px"
+                               id="flowRegion4791"><rect
+                                 style="font-size:26.66666794px"
+                                 y="235.60574"
+                                 x="96.97464"
+                                 height="44.446716"
+                                 width="214.15234"
+                                 id="rect4789" /></flowRegion><flowPara
+                               id="flowPara4793">Submit meal</flowPara></flowRoot>                        </g>
+                      </g>
+                      <g
+                         id="g4887"
+                         transform="translate(16.962409,-426.77425)">
                         <flowRoot
-                           transform="matrix(0.26458333,0,0,0.26458333,1.603617,0.41679366)"
+                           xml:space="preserve"
+                           id="flowRoot4835"
                            style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                           id="flowRoot5025"
+                           transform="matrix(0.26458333,0,0,0.26458333,1.603617,-1.5695011)"><flowRegion
+                             id="flowRegion4831"
+                             style="font-size:26.66666794px"><rect
+                               id="rect4829"
+                               width="226.2742"
+                               height="36.365501"
+                               x="28.284271"
+                               y="88.123482"
+                               style="font-size:26.66666794px" /></flowRegion><flowPara
+                             id="flowPara4833">New food name:</flowPara></flowRoot>                        <g
+                           transform="translate(-19.082234)"
+                           id="g4875">
+                          <flowRoot
+                             xml:space="preserve"
+                             id="flowRoot4827"
+                             style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                             transform="matrix(0.26458333,0,0,0.26458333,36.173959,-1.5695012)"><flowRegion
+                               id="flowRegion4823"
+                               style="font-size:26.66666794px;stroke:none"><rect
+                                 id="rect4821"
+                                 width="224.25389"
+                                 height="36.365494"
+                                 x="228.29448"
+                                 y="88.123482"
+                                 style="font-size:26.66666794px;stroke:none" /></flowRegion><flowPara
+                               id="flowPara4825"
+                               style="stroke:none">&lt;food name&gt;</flowPara></flowRoot>                          <rect
+                             style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                             id="rect4837"
+                             width="68.420998"
+                             height="14.967093"
+                             x="91.245003"
+                             y="18.558876" />
+                        </g>
+                      </g>
+                      <g
+                         id="g4939"
+                         transform="translate(16.962409,-426.77425)">
+                        <flowRoot
+                           transform="matrix(0.26458333,0,0,0.26458333,1.603617,19.597166)"
+                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                           id="flowRoot4895"
                            xml:space="preserve"><flowRegion
                              style="font-size:26.66666794px"
-                             id="flowRegion5021"><rect
+                             id="flowRegion4891"><rect
                                style="font-size:26.66666794px"
                                y="88.123482"
                                x="28.284271"
-                               height="46.541126"
-                               width="284.86301"
-                               id="rect5019" /></flowRegion><flowPara
-                             id="flowPara5023">Body weight in kg:</flowPara></flowRoot>                        <g
-                           id="g5037"
-                           transform="translate(-13.14331,1.9862943)">
+                               height="36.365501"
+                               width="169.70566"
+                               id="rect4889" /></flowRegion><flowPara
+                             id="flowPara4893">kCal / 100g:</flowPara></flowRoot>                        <g
+                           id="g4907"
+                           transform="translate(-19.082234,21.166667)">
                           <g
-                             id="g5046">
+                             transform="translate(-16.355816)"
+                             id="g4926">
                             <flowRoot
                                xml:space="preserve"
-                               id="flowRoot5033"
+                               id="flowRoot4903"
                                style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                               transform="matrix(0.26458333,0,0,0.26458333,36.173959,-1.5695012)"><flowRegion
-                                 id="flowRegion5029"
+                               transform="matrix(0.26458333,0,0,0.26458333,35.042467,-1.21493)"><flowRegion
+                                 id="flowRegion4899"
                                  style="font-size:26.66666794px;stroke:none"><rect
-                                   id="rect5027"
+                                   id="rect4897"
                                    width="224.25389"
                                    height="36.365494"
                                    x="228.29448"
                                    y="88.123482"
                                    style="font-size:26.66666794px;stroke:none" /></flowRegion><flowPara
-                                 id="flowPara5031"
-                                 style="stroke:none">85.3</flowPara></flowRoot>                            <rect
+                                 id="flowPara4901"
+                                 style="stroke:none">200</flowPara></flowRoot>                            <rect
                                style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                               id="rect5035"
-                               width="41.159504"
+                               id="rect4905"
+                               width="29.399647"
                                height="14.432555"
                                x="91.245003"
                                y="18.558876" />
                           </g>
                         </g>
                       </g>
-                    </g>
-                    <g
-                       id="g5075"
-                       transform="translate(6.0740186,-402.61523)">
                       <g
-                         id="g5061"
-                         transform="translate(8.4989013)" />
-                      <g
-                         id="g5073"
-                         transform="translate(-11.652411,0.53453905)">
+                         id="g4953"
+                         transform="translate(90.740701,-444.94859)">
                         <g
-                           id="g5082">
-                          <g
-                             id="g5089">
-                            <rect
-                               ry="6.9556437"
-                               y="57.519867"
-                               x="22.97855"
-                               height="14.602393"
-                               width="87.13295"
-                               id="rect5063"
-                               style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                               transform="translate(8.4989009)" />
-                            <flowRoot
-                               xml:space="preserve"
-                               id="flowRoot5071"
-                               style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                               transform="matrix(0.26458333,0,0,0.26458333,13.861959,-1.8122502)"><flowRegion
-                                 id="flowRegion5067"
-                                 style="font-size:26.66666794px"><rect
-                                   id="rect5065"
-                                   width="272.14517"
-                                   height="53.073112"
-                                   x="96.97464"
-                                   y="235.60574"
-                                   style="font-size:26.66666794px" /></flowRegion><flowPara
-                                 id="flowPara5069">Submit body weight</flowPara></flowRoot>                          </g>
-                        </g>
-                      </g>
-                    </g>
-                    <g
-                       transform="translate(16.962409,-341.86276)"
-                       id="g5115">
-                      <g
-                         id="g5156">
-                        <flowRoot
-                           xml:space="preserve"
-                           id="flowRoot5097"
-                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                           transform="matrix(0.26458333,0,0,0.26458333,1.603617,-1.7213626)"><flowRegion
-                             id="flowRegion5093"
-                             style="font-size:26.66666794px"><rect
-                               id="rect5091"
-                               width="232.00586"
-                               height="34.39827"
-                               x="28.284271"
-                               y="88.123482"
-                               style="font-size:26.66666794px" /></flowRegion><flowPara
-                             id="flowPara5095">Waist size in cm:</flowPara></flowRoot>                        <g
-                           id="g5144"
-                           transform="translate(-5.2916663)">
-                          <flowRoot
-                             xml:space="preserve"
-                             id="flowRoot5105"
-                             style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                             transform="matrix(0.26458333,0,0,0.26458333,21.961569,-1.3667912)"><flowRegion
-                               id="flowRegion5101"
-                               style="font-size:26.66666794px;stroke:none"><rect
-                                 id="rect5099"
-                                 width="224.25389"
-                                 height="36.365494"
-                                 x="228.29448"
-                                 y="88.123482"
-                                 style="font-size:26.66666794px;stroke:none" /></flowRegion><flowPara
-                               id="flowPara5103"
-                               style="stroke:none">102.5</flowPara></flowRoot>                          <rect
-                             style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                             id="rect5107"
-                             width="40.624966"
-                             height="14.432555"
-                             x="78.101692"
-                             y="18.407015" />
-                        </g>
-                      </g>
-                    </g>
-                    <g
-                       transform="translate(-5.5783876,-359.74734)"
-                       id="g5172">
-                      <g
-                         id="g5170">
+                           id="g4943"
+                           transform="translate(8.4989013)" />
                         <g
-                           transform="translate(113.58954,-21.029717)"
-                           id="g5183">
+                           id="g4970"
+                           transform="translate(-11.652411,0.53453905)">
                           <rect
-                             ry="6.4507508"
+                             ry="6.9556437"
                              y="57.519867"
                              x="22.97855"
-                             height="14.03543"
-                             width="76.549614"
-                             id="rect5160"
+                             height="14.980369"
+                             width="74.848724"
+                             id="rect4941"
                              style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
                              transform="translate(8.4989009)" />
                           <flowRoot
                              xml:space="preserve"
-                             id="flowRoot5168"
+                             id="flowRoot4951"
                              style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                             transform="matrix(0.26458333,0,0,0.26458333,13.203942,-1.4118803)"><flowRegion
-                               id="flowRegion5164"
+                             transform="matrix(0.26458333,0,0,0.26458333,13.527801,-1.2066811)"><flowRegion
+                               id="flowRegion4947"
                                style="font-size:26.66666794px"><rect
-                                 id="rect5162"
+                                 id="rect4945"
                                  width="272.14517"
                                  height="53.073112"
                                  x="96.97464"
                                  y="235.60574"
                                  style="font-size:26.66666794px" /></flowRegion><flowPara
-                               id="flowPara5166">Submit waist size</flowPara></flowRoot>                        </g>
+                               id="flowPara4949">Submit new food</flowPara></flowRoot>                        </g>
                       </g>
-                    </g>
-                    <g
-                       transform="translate(0.78235899,-523.49068)"
-                       id="g1635">
                       <g
-                         id="g1625">
-                        <rect
-                           ry="6.9556437"
-                           y="56.985329"
-                           x="26.18578"
-                           height="15.514905"
-                           width="70.572418"
-                           id="rect1623"
-                           style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+                         transform="translate(16.962409,-384.44089)"
+                         id="g5039">
+                        <g
+                           id="g5059"
+                           transform="translate(0,-2.1381563)">
+                          <flowRoot
+                             xml:space="preserve"
+                             id="flowRoot5025"
+                             style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                             transform="matrix(0.26458333,0,0,0.26458333,1.603617,0.41679366)"><flowRegion
+                               id="flowRegion5021"
+                               style="font-size:26.66666794px"><rect
+                                 id="rect5019"
+                                 width="284.86301"
+                                 height="46.541126"
+                                 x="28.284271"
+                                 y="88.123482"
+                                 style="font-size:26.66666794px" /></flowRegion><flowPara
+                               id="flowPara5023">Body weight in kg:</flowPara></flowRoot>                          <g
+                             transform="translate(-13.14331,1.9862943)"
+                             id="g5037">
+                            <g
+                               id="g5046">
+                              <flowRoot
+                                 transform="matrix(0.26458333,0,0,0.26458333,36.173959,-1.5695012)"
+                                 style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                                 id="flowRoot5033"
+                                 xml:space="preserve"><flowRegion
+                                   style="font-size:26.66666794px;stroke:none"
+                                   id="flowRegion5029"><rect
+                                   style="font-size:26.66666794px;stroke:none"
+                                   y="88.123482"
+                                   x="228.29448"
+                                   height="36.365494"
+                                   width="224.25389"
+                                   id="rect5027" /></flowRegion><flowPara
+                                   style="stroke:none"
+                                   id="flowPara5031">85.3</flowPara></flowRoot>                              <rect
+                                 y="18.558876"
+                                 x="91.245003"
+                                 height="14.432555"
+                                 width="41.159504"
+                                 id="rect5035"
+                                 style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+                            </g>
+                          </g>
+                        </g>
                       </g>
+                      <g
+                         transform="translate(6.0740186,-402.61523)"
+                         id="g5075">
+                        <g
+                           transform="translate(8.4989013)"
+                           id="g5061" />
+                        <g
+                           transform="translate(-11.652411,0.53453905)"
+                           id="g5073">
+                          <g
+                             id="g5082">
+                            <g
+                               id="g5089">
+                              <rect
+                                 transform="translate(8.4989009)"
+                                 style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                                 id="rect5063"
+                                 width="87.13295"
+                                 height="14.602393"
+                                 x="22.97855"
+                                 y="57.519867"
+                                 ry="6.9556437" />
+                              <flowRoot
+                                 transform="matrix(0.26458333,0,0,0.26458333,13.861959,-1.8122502)"
+                                 style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                                 id="flowRoot5071"
+                                 xml:space="preserve"><flowRegion
+                                   style="font-size:26.66666794px"
+                                   id="flowRegion5067"><rect
+                                   style="font-size:26.66666794px"
+                                   y="235.60574"
+                                   x="96.97464"
+                                   height="53.073112"
+                                   width="272.14517"
+                                   id="rect5065" /></flowRegion><flowPara
+                                   id="flowPara5069">Submit body weight</flowPara></flowRoot>                            </g>
+                          </g>
+                        </g>
+                      </g>
+                      <g
+                         id="g5115"
+                         transform="translate(16.962409,-341.86276)">
+                        <g
+                           id="g5156">
+                          <flowRoot
+                             transform="matrix(0.26458333,0,0,0.26458333,1.603617,-1.7213626)"
+                             style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                             id="flowRoot5097"
+                             xml:space="preserve"><flowRegion
+                               style="font-size:26.66666794px"
+                               id="flowRegion5093"><rect
+                                 style="font-size:26.66666794px"
+                                 y="88.123482"
+                                 x="28.284271"
+                                 height="34.39827"
+                                 width="232.00586"
+                                 id="rect5091" /></flowRegion><flowPara
+                               id="flowPara5095">Waist size in cm:</flowPara></flowRoot>                          <g
+                             transform="translate(-5.2916663)"
+                             id="g5144">
+                            <flowRoot
+                               transform="matrix(0.26458333,0,0,0.26458333,21.961569,-1.3667912)"
+                               style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                               id="flowRoot5105"
+                               xml:space="preserve"><flowRegion
+                                 style="font-size:26.66666794px;stroke:none"
+                                 id="flowRegion5101"><rect
+                                   style="font-size:26.66666794px;stroke:none"
+                                   y="88.123482"
+                                   x="228.29448"
+                                   height="36.365494"
+                                   width="224.25389"
+                                   id="rect5099" /></flowRegion><flowPara
+                                 style="stroke:none"
+                                 id="flowPara5103">102.5</flowPara></flowRoot>                            <rect
+                               y="18.407015"
+                               x="78.101692"
+                               height="14.432555"
+                               width="40.624966"
+                               id="rect5107"
+                               style="fill:none;stroke:#000000;stroke-width:0.465;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+                          </g>
+                        </g>
+                      </g>
+                      <g
+                         id="g5172"
+                         transform="translate(-5.5783876,-359.74734)">
+                        <g
+                           id="g5170">
+                          <g
+                             id="g5183"
+                             transform="translate(113.58954,-21.029717)">
+                            <rect
+                               transform="translate(8.4989009)"
+                               style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                               id="rect5160"
+                               width="76.549614"
+                               height="14.03543"
+                               x="22.97855"
+                               y="57.519867"
+                               ry="6.4507508" />
+                            <flowRoot
+                               transform="matrix(0.26458333,0,0,0.26458333,13.203942,-1.4118803)"
+                               style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                               id="flowRoot5168"
+                               xml:space="preserve"><flowRegion
+                                 style="font-size:26.66666794px"
+                                 id="flowRegion5164"><rect
+                                   style="font-size:26.66666794px"
+                                   y="235.60574"
+                                   x="96.97464"
+                                   height="53.073112"
+                                   width="272.14517"
+                                   id="rect5162" /></flowRegion><flowPara
+                                 id="flowPara5166">Submit waist size</flowPara></flowRoot>                          </g>
+                        </g>
+                      </g>
+                      <g
+                         id="g1635"
+                         transform="translate(0.78235899,-523.49068)">
+                        <g
+                           id="g1625">
+                          <rect
+                             style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                             id="rect1623"
+                             width="70.572418"
+                             height="15.514905"
+                             x="26.18578"
+                             y="56.985329"
+                             ry="6.9556437" />
+                        </g>
+                        <flowRoot
+                           transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"
+                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                           id="flowRoot1633"
+                           xml:space="preserve"><flowRegion
+                             style="font-size:26.66666794px"
+                             id="flowRegion1629"><rect
+                               style="font-size:26.66666794px"
+                               y="235.60574"
+                               x="96.97464"
+                               height="44.446716"
+                               width="214.15234"
+                               id="rect1627" /></flowRegion><flowPara
+                             id="flowPara1631">&lt;food name&gt;</flowPara></flowRoot>                      </g>
+                      <g
+                         transform="translate(77.022745,-523.49068)"
+                         id="g1649">
+                        <g
+                           id="g1639">
+                          <rect
+                             ry="6.9556437"
+                             y="56.985329"
+                             x="26.18578"
+                             height="15.514905"
+                             width="70.572418"
+                             id="rect1637"
+                             style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+                        </g>
+                        <flowRoot
+                           xml:space="preserve"
+                           id="flowRoot1647"
+                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                           transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"><flowRegion
+                             id="flowRegion1643"
+                             style="font-size:26.66666794px"><rect
+                               id="rect1641"
+                               width="214.15234"
+                               height="44.446716"
+                               x="96.97464"
+                               y="235.60574"
+                               style="font-size:26.66666794px" /></flowRegion><flowPara
+                             id="flowPara1645">&lt;food name&gt;</flowPara></flowRoot>                      </g>
                       <flowRoot
                          xml:space="preserve"
-                         id="flowRoot1633"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"><flowRegion
-                           id="flowRegion1629"
-                           style="font-size:26.66666794px"><rect
-                             id="rect1627"
-                             width="214.15234"
-                             height="44.446716"
-                             x="96.97464"
-                             y="235.60574"
-                             style="font-size:26.66666794px" /></flowRegion><flowPara
-                           id="flowPara1631">&lt;food name&gt;</flowPara></flowRoot>                    </g>
-                    <g
-                       id="g1649"
-                       transform="translate(77.022745,-523.49068)">
-                      <g
-                         id="g1639">
-                        <rect
-                           style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                           id="rect1637"
-                           width="70.572418"
-                           height="15.514905"
-                           x="26.18578"
-                           y="56.985329"
-                           ry="6.9556437" />
-                      </g>
-                      <flowRoot
-                         transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         id="flowRoot1647"
+                         id="flowRoot1667"
+                         style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                         transform="matrix(0.60006195,0,0,0.60006195,-139.8854,-554.6048)"><flowRegion
+                           id="flowRegion1669"><rect
+                             id="rect1671"
+                             width="132.27687"
+                             height="54.13258"
+                             x="277.72311"
+                             y="160.52998" /></flowRegion><flowPara
+                           id="flowPara1673"
+                           style="font-size:11.74666691px">... more foods</flowPara></flowRoot>                      <flowRoot
+                         transform="matrix(0.26458332,0,0,0.26458332,72.212289,-455.17439)"
+                         style="font-style:normal;font-weight:normal;font-size:26.67110062px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                         id="flowRoot1630"
                          xml:space="preserve"><flowRegion
-                           style="font-size:26.66666794px"
-                           id="flowRegion1643"><rect
-                             style="font-size:26.66666794px"
-                             y="235.60574"
-                             x="96.97464"
-                             height="44.446716"
-                             width="214.15234"
-                             id="rect1641" /></flowRegion><flowPara
-                           id="flowPara1645">&lt;food name&gt;</flowPara></flowRoot>                    </g>
-                    <flowRoot
-                       transform="matrix(0.60006195,0,0,0.60006195,-139.8854,-554.6048)"
-                       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                       id="flowRoot1667"
-                       xml:space="preserve"><flowRegion
-                         id="flowRegion1669"><rect
-                           y="160.52998"
-                           x="277.72311"
-                           height="54.13258"
-                           width="132.27687"
-                           id="rect1671" /></flowRegion><flowPara
-                         style="font-size:11.74666691px"
-                         id="flowPara1673">... more foods</flowPara></flowRoot>                    <flowRoot
-                       xml:space="preserve"
-                       id="flowRoot1630"
-                       style="font-style:normal;font-weight:normal;font-size:26.67110062px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                       transform="matrix(0.26458332,0,0,0.26458332,72.212289,-455.17439)"><flowRegion
-                         style="font-size:26.67110062px"
-                         id="flowRegion1622"><rect
-                           style="font-size:26.67110062px"
-                           id="rect1620"
-                           width="575.78699"
-                           height="54.548252"
-                           x="34.345188"
-                           y="33.575241" /></flowRegion><flowPara
-                         id="flowPara1628"><flowSpan
-                           style="font-size:26.67110062px"
-                           id="flowSpan1626"><flowSpan
-   id="flowSpan1634"
-   style="font-size:39.31114578px">Avocado</flowSpan> is selected </flowSpan></flowPara></flowRoot>                    <g
-                       id="g1648"
-                       transform="translate(77.022745,-564.44217)">
-                      <g
-                         id="g1638">
-                        <rect
-                           style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-                           id="rect1636"
-                           width="70.572418"
-                           height="15.514905"
-                           x="26.18578"
-                           y="56.985329"
-                           ry="6.9556437" />
-                      </g>
-                      <flowRoot
-                         transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"
-                         style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-                         id="flowRoot1646"
-                         xml:space="preserve"><flowRegion
-                           style="font-size:26.66666794px"
-                           id="flowRegion1642"><rect
-                             style="font-size:26.66666794px"
-                             y="235.60574"
-                             x="96.97464"
-                             height="44.446716"
-                             width="214.15234"
-                             id="rect1640" /></flowRegion><flowPara
-                           id="flowPara1644">&lt;food name&gt;</flowPara></flowRoot>                    </g>
+                           id="flowRegion1622"
+                           style="font-size:26.67110062px"><rect
+                             y="33.575241"
+                             x="34.345188"
+                             height="54.548252"
+                             width="575.78699"
+                             id="rect1620"
+                             style="font-size:26.67110062px" /></flowRegion><flowPara
+                           id="flowPara1628"><flowSpan
+                             id="flowSpan1626"
+                             style="font-size:26.67110062px"><flowSpan
+   style="font-size:39.31114578px"
+   id="flowSpan1634">Avocado</flowSpan> is selected </flowSpan></flowPara></flowRoot>                      <g
+                         transform="translate(77.022745,-564.44217)"
+                         id="g1648">
+                        <g
+                           id="g1638">
+                          <rect
+                             ry="6.9556437"
+                             y="56.985329"
+                             x="26.18578"
+                             height="15.514905"
+                             width="70.572418"
+                             id="rect1636"
+                             style="fill:none;stroke:#000000;stroke-width:0.45173079;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+                        </g>
+                        <flowRoot
+                           xml:space="preserve"
+                           id="flowRoot1646"
+                           style="font-style:normal;font-weight:normal;font-size:26.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+                           transform="matrix(0.26458333,0,0,0.26458333,10.978428,-1.2066811)"><flowRegion
+                             id="flowRegion1642"
+                             style="font-size:26.66666794px"><rect
+                               id="rect1640"
+                               width="214.15234"
+                               height="44.446716"
+                               x="96.97464"
+                               y="235.60574"
+                               style="font-size:26.66666794px" /></flowRegion><flowPara
+                             id="flowPara1644">&lt;food name&gt;</flowPara></flowRoot>                      </g>
+                    </g>
                   </g>
                 </g>
               </g>
