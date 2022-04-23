@@ -13,9 +13,7 @@
 <script type="text/javascript">
 var app = Elm.Main.init({
     node: document.getElementById('myapp'),
-    flags:
-        {'cache': localStorage.getItem('cache'),
-         'now': Date.now()};
+    flags: localStorage.getItem('cache')
 });
 
 app.ports.elmToJs.subscribe(function(message) {
