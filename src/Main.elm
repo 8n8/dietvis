@@ -1,6 +1,9 @@
 port module Main exposing (main)
 
 import BodyWeight exposing (BodyWeight)
+import File.Download as Download
+import File.Select as Select
+import File as File exposing (File)
 import BodyWeightRecords exposing (BodyWeightRecords)
 import Browser
 import EnergyRate exposing (EnergyRate)
@@ -49,6 +52,10 @@ type Msg
     | MealTime Time.Posix
     | BodyWeightTime Time.Posix
     | WaistSizeTime Time.Posix
+    | DownloadData
+    | UploadData
+    | SelectedFile File
+    | FileLoaded String
 
 
 port toLocalStorage : String -> Cmd msg
@@ -119,6 +126,7 @@ _Calories chart_
 -}
 type alias OkModel =
     { foodSearchBox : String
+    , fileUploadStatus : FileUploadStatus
     , customFoods : Foods
     , foodSearchResultsPage : PageNum
     , selectedFood : Maybe Food
@@ -134,6 +142,11 @@ type alias OkModel =
     , meals : Meals
     , mealsPage : PageNum
     }
+
+
+type FileUploadStatus
+    = BadFile
+    | NoProblems
 
 
 type alias Cache =
@@ -193,6 +206,41 @@ encodeCache { customFoods, bodyWeightRecords, waistSizeRecords, meals } =
 updateOk : Msg -> OkModel -> ( Model, Cmd Msg )
 updateOk msg model =
     case msg of
+        DownloadData ->
+            ( Ok_ model
+            , Download.string
+                "diet.json"
+                "application/json"
+                (encodeCache model)
+            )
+
+        UploadData ->
+            ( Ok_ model
+            , Select.file ["application/json"] SelectedFile
+            )
+
+        SelectedFile file ->
+            (Ok_ model, Task.perform FileLoaded (File.toString file))
+
+        FileLoaded raw ->
+            case Decode.decodeString decodeCache raw of
+                Err err ->
+                    ( Ok_ { model | fileUploadStatus = BadFile }
+                    , Cmd.none
+                    )
+
+                Ok {customFoods, bodyWeightRecords, waistSizeRecords, meals } ->
+                    let
+                        newModel =
+                            { model
+                                | customFoods = customFoods
+                                , bodyWeightRecords = bodyWeightRecords
+                                , waistSizeRecords = waistSizeRecords
+                                , meals = meals
+                            }
+                    in
+                        ( Ok_ newModel, dumpCache newModel )
+
         FoodSearchBox query ->
             ( Ok_ { model | foodSearchBox = query }, Cmd.none )
 
@@ -468,6 +516,7 @@ init flags =
               , waistSizesPage = PageNum.first
               , meals = meals
               , mealsPage = PageNum.first
+              , fileUploadStatus = NoProblems
               }
                 |> Ok_
             , Cmd.none
@@ -489,6 +538,7 @@ init flags =
               , mealWeightBox = ""
               , newFoodDescriptionBox = ""
               , newFoodEnergyBox = ""
+              , fileUploadStatus = NoProblems
               }
                 |> Ok_
             , Cmd.none
