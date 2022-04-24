@@ -1,12 +1,12 @@
 port module Main exposing (main)
 
 import BodyWeight exposing (BodyWeight)
-import File.Download as Download
-import File.Select as Select
-import File as File exposing (File)
 import BodyWeightRecords exposing (BodyWeightRecords)
 import Browser
 import EnergyRate exposing (EnergyRate)
+import File as File exposing (File)
+import File.Download as Download
+import File.Select as Select
 import Food exposing (Food)
 import FoodDescription exposing (FoodDescription)
 import FoodMass exposing (FoodMass)
@@ -216,11 +216,11 @@ updateOk msg model =
 
         UploadData ->
             ( Ok_ model
-            , Select.file ["application/json"] SelectedFile
+            , Select.file [ "application/json" ] SelectedFile
             )
 
         SelectedFile file ->
-            (Ok_ model, Task.perform FileLoaded (File.toString file))
+            ( Ok_ model, Task.perform FileLoaded (File.toString file) )
 
         FileLoaded raw ->
             case Decode.decodeString decodeCache raw of
@@ -229,7 +229,7 @@ updateOk msg model =
                     , Cmd.none
                     )
 
-                Ok {customFoods, bodyWeightRecords, waistSizeRecords, meals } ->
+                Ok { customFoods, bodyWeightRecords, waistSizeRecords, meals } ->
                     let
                         newModel =
                             { model
@@ -239,7 +239,7 @@ updateOk msg model =
                                 , meals = meals
                             }
                     in
-                        ( Ok_ newModel, dumpCache newModel )
+                    ( Ok_ newModel, dumpCache newModel )
 
         FoodSearchBox query ->
             ( Ok_ { model | foodSearchBox = query }, Cmd.none )
@@ -250,7 +250,7 @@ updateOk msg model =
         OneMoreFoodSearchPage ->
             case PageNum.plus1 model.foodSearchResultsPage of
                 Err err ->
-                    ( Fatal err, Cmd.none)
+                    ( Fatal err, Cmd.none )
 
                 Ok newPageNum ->
                     ( { model | foodSearchResultsPage = newPageNum }
@@ -261,7 +261,7 @@ updateOk msg model =
         OneLessFoodSearchPage ->
             case PageNum.minus1 model.foodSearchResultsPage of
                 Err err ->
-                    ( Fatal err , Cmd.none)
+                    ( Fatal err, Cmd.none )
 
                 Ok newPageNum ->
                     ( { model | foodSearchResultsPage = newPageNum }
