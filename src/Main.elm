@@ -4,7 +4,6 @@ import BodyWeight exposing (BodyWeight)
 import BodyWeightRecords exposing (BodyWeightRecords)
 import Browser
 import EnergyRate exposing (EnergyRate)
-import FatalError exposing (FatalError)
 import Food exposing (Food)
 import FoodDescription exposing (FoodDescription)
 import FoodMass exposing (FoodMass)
@@ -23,7 +22,7 @@ import WaistSizeRecords exposing (WaistSizeRecords)
 
 
 type Model
-    = Fatal FatalError
+    = Fatal String
     | Ok_ OkModel
 
 
@@ -203,9 +202,7 @@ updateOk msg model =
         OneMoreFoodSearchPage ->
             case PageNum.plus1 model.foodSearchResultsPage of
                 Err err ->
-                    ( Fatal (FatalError.fromString err)
-                    , Cmd.none
-                    )
+                    ( Fatal err, Cmd.none)
 
                 Ok newPageNum ->
                     ( { model | foodSearchResultsPage = newPageNum }
@@ -216,9 +213,7 @@ updateOk msg model =
         OneLessFoodSearchPage ->
             case PageNum.minus1 model.foodSearchResultsPage of
                 Err err ->
-                    ( Fatal (FatalError.fromString err)
-                    , Cmd.none
-                    )
+                    ( Fatal err , Cmd.none)
 
                 Ok newPageNum ->
                     ( { model | foodSearchResultsPage = newPageNum }
@@ -339,7 +334,7 @@ updateOk msg model =
         OneMoreBodyWeightPage ->
             case PageNum.plus1 model.bodyWeightsPage of
                 Err err ->
-                    ( Fatal (FatalError.fromString err), Cmd.none )
+                    ( Fatal err, Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | bodyWeightsPage = newPage }
@@ -349,7 +344,7 @@ updateOk msg model =
         OneLessBodyWeightPage ->
             case PageNum.minus1 model.bodyWeightsPage of
                 Err err ->
-                    ( Fatal (FatalError.fromString err), Cmd.none )
+                    ( Fatal err, Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | bodyWeightsPage = newPage }
@@ -359,7 +354,7 @@ updateOk msg model =
         OneMoreWaistSizePage ->
             case PageNum.plus1 model.waistSizesPage of
                 Err err ->
-                    ( Fatal (FatalError.fromString err), Cmd.none )
+                    ( Fatal err, Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | waistSizesPage = newPage }
@@ -369,7 +364,7 @@ updateOk msg model =
         OneLessWaistSizePage ->
             case PageNum.minus1 model.waistSizesPage of
                 Err err ->
-                    ( Fatal (FatalError.fromString err), Cmd.none )
+                    ( Fatal err, Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | waistSizesPage = newPage }
@@ -379,7 +374,7 @@ updateOk msg model =
         OneMoreMealsPage ->
             case PageNum.plus1 model.mealsPage of
                 Err err ->
-                    ( Fatal (FatalError.fromString err), Cmd.none )
+                    ( Fatal err, Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | mealsPage = newPage }
@@ -389,7 +384,7 @@ updateOk msg model =
         OneLessMealsPage ->
             case PageNum.minus1 model.mealsPage of
                 Err err ->
-                    ( Fatal (FatalError.fromString err), Cmd.none )
+                    ( Fatal err, Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | mealsPage = newPage }
@@ -453,7 +448,7 @@ init : Decode.Value -> ( Model, Cmd Msg )
 init flags =
     case Decode.decodeValue (Decode.nullable decodeCache) flags of
         Err err ->
-            ( Fatal (FatalError.fromString (Decode.errorToString err))
+            ( Fatal (Decode.errorToString err)
             , Cmd.none
             )
 
@@ -502,4 +497,4 @@ init flags =
 
 view : Model -> Html Msg
 view model =
-    Html.text "Hello"
+    Html.text "hi"
