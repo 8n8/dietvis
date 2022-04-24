@@ -1,6 +1,5 @@
 module Timestamp exposing (Timestamp, decode, encode, fromPosix)
 
-
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Time

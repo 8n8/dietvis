@@ -1,11 +1,13 @@
 module Energy exposing (Energy, decode, encode, fromKcalString)
 
-
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 
 
+
 -- Energy is measured in kCal
+
+
 type Energy
     = Energy Int
 
@@ -28,7 +30,10 @@ maxEnergy =
     100000
 
 
+
 -- The string should be a number of kCal.
+
+
 fromKcalString : String -> Result String Energy
 fromKcalString raw =
     case String.toInt raw of

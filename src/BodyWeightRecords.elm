@@ -1,17 +1,20 @@
 module BodyWeightRecords exposing
-    (BodyWeightRecords
-    , decode, empty, encode, insert)
+    ( BodyWeightRecords
+    , decode
+    , empty
+    , encode
+    , insert
+    )
 
-
-import Json.Decode as Decode exposing (Decoder)
-import Json.Encode as Encode
 import Array exposing (Array)
 import BodyWeight exposing (BodyWeight)
+import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
 import Timestamp exposing (Timestamp)
 
 
-type BodyWeightRecords =
-    BodyWeightRecords (List BodyWeightRecord)
+type BodyWeightRecords
+    = BodyWeightRecords (List BodyWeightRecord)
 
 
 type alias BodyWeightRecord =
@@ -21,12 +24,12 @@ type alias BodyWeightRecord =
 
 
 insert :
-    Timestamp ->
-    BodyWeight ->
-    BodyWeightRecords ->
-    BodyWeightRecords
+    Timestamp
+    -> BodyWeight
+    -> BodyWeightRecords
+    -> BodyWeightRecords
 insert timestamp bodyWeight (BodyWeightRecords bodyWeights) =
-    {timestamp = timestamp, bodyWeight = bodyWeight}
+    { timestamp = timestamp, bodyWeight = bodyWeight }
         :: bodyWeights
         |> BodyWeightRecords
 
@@ -42,11 +45,11 @@ encode (BodyWeightRecords records) =
 
 
 encodeOne : BodyWeightRecord -> Encode.Value
-encodeOne {timestamp, bodyWeight} =
-    [ ("timestamp", Timestamp.encode timestamp)
-    , ("bodyWeight", BodyWeight.encode bodyWeight)
+encodeOne { timestamp, bodyWeight } =
+    [ ( "timestamp", Timestamp.encode timestamp )
+    , ( "bodyWeight", BodyWeight.encode bodyWeight )
     ]
-    |> Encode.object
+        |> Encode.object
 
 
 decodeOne : Decoder BodyWeightRecord

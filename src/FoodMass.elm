@@ -1,11 +1,11 @@
 module FoodMass exposing (FoodMass, decode, encode, fromGramString, hundredGrams)
 
-
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 
 
-{-| Measured in grams -}
+{-| Measured in grams
+-}
 type FoodMass
     = FoodMass Int
 
@@ -43,12 +43,8 @@ fromGramString raw =
             if intGrams < 0 then
                 Err "a food weight must be a positive number"
 
+            else if intGrams > maxMass then
+                Err "a food weight must not be more than 10kg"
+
             else
-                if intGrams > maxMass then
-                    Err "a food weight must not be more than 10kg"
-
-                else
-                    Ok (FoodMass intGrams)
-
-                
-            
+                Ok (FoodMass intGrams)

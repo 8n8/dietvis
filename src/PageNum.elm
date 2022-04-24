@@ -1,4 +1,4 @@
-module PageNum exposing (PageNum, first, plus1, minus1)
+module PageNum exposing (PageNum, first, minus1, plus1)
 
 
 type PageNum
@@ -11,7 +11,7 @@ first =
 
 
 {-| There is nothing special about this number. All it needs to be is
-less than integer overflow and more than there will be pages. 
+less than integer overflow and more than there will be pages.
 -}
 maxPageNum : Int
 maxPageNum =

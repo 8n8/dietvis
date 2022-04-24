@@ -1,6 +1,5 @@
 module FoodDescription exposing (FoodDescription, decode, encode, fromString)
 
-
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Set exposing (Set)
@@ -21,7 +20,8 @@ maxLength =
 fromString : String -> Result String FoodDescription
 fromString untrimmed =
     let
-        trimmed = String.trim untrimmed
+        trimmed =
+            String.trim untrimmed
     in
     if String.length trimmed > maxLength then
         Err "too long"
@@ -39,7 +39,7 @@ fromString untrimmed =
 isOkChars : String -> Bool
 isOkChars s =
     case String.uncons s of
-        Just (top, tail) ->
+        Just ( top, tail ) ->
             if Set.member top okChars then
                 isOkChars tail
 
@@ -52,13 +52,97 @@ isOkChars s =
 
 okChars : Set Char
 okChars =
-    [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'k', 'l', 'm', 'n'
-    , 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A'
-    , 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'
-    , 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0'
-    , '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '!', '"', '£'
-    , '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '~', '#'
-    , '[', ']', '{', '}', ';', ':', '\'', '@', '<', ',', '>', '.', '/'
+    [ 'a'
+    , 'b'
+    , 'c'
+    , 'd'
+    , 'e'
+    , 'f'
+    , 'g'
+    , 'h'
+    , 'i'
+    , 'k'
+    , 'l'
+    , 'm'
+    , 'n'
+    , 'o'
+    , 'p'
+    , 'q'
+    , 'r'
+    , 's'
+    , 't'
+    , 'u'
+    , 'v'
+    , 'w'
+    , 'x'
+    , 'y'
+    , 'z'
+    , 'A'
+    , 'B'
+    , 'C'
+    , 'D'
+    , 'E'
+    , 'F'
+    , 'G'
+    , 'H'
+    , 'I'
+    , 'J'
+    , 'K'
+    , 'L'
+    , 'M'
+    , 'N'
+    , 'O'
+    , 'P'
+    , 'Q'
+    , 'R'
+    , 'S'
+    , 'T'
+    , 'U'
+    , 'V'
+    , 'W'
+    , 'X'
+    , 'Y'
+    , 'Z'
+    , '0'
+    , '1'
+    , '2'
+    , '3'
+    , '4'
+    , '5'
+    , '6'
+    , '7'
+    , '8'
+    , '9'
+    , ' '
+    , '!'
+    , '"'
+    , '£'
+    , '$'
+    , '%'
+    , '^'
+    , '&'
+    , '*'
+    , '('
+    , ')'
+    , '_'
+    , '-'
+    , '+'
+    , '='
+    , '~'
+    , '#'
+    , '['
+    , ']'
+    , '{'
+    , '}'
+    , ';'
+    , ':'
+    , '\''
+    , '@'
+    , '<'
+    , ','
+    , '>'
+    , '.'
+    , '/'
     , '?'
     ]
         |> Set.fromList

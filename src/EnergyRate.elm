@@ -1,7 +1,9 @@
 module EnergyRate exposing
-    (EnergyRate
-    , decode, encode, fromKcalPer100gString)
-
+    ( EnergyRate
+    , decode
+    , encode
+    , fromKcalPer100gString
+    )
 
 import Energy exposing (Energy)
 import FoodMass exposing (FoodMass)
@@ -22,8 +24,8 @@ decode =
 
 encode : EnergyRate -> Encode.Value
 encode (EnergyRate energy foodMass) =
-    [ ( "energy", Energy.encode energy)
-    , ("foodMass", FoodMass.encode foodMass)
+    [ ( "energy", Energy.encode energy )
+    , ( "foodMass", FoodMass.encode foodMass )
     ]
         |> Encode.object
 

@@ -1,10 +1,10 @@
-module Food exposing (Food, encode, decode, energyRate, make)
-
+module Food exposing (Food, decode, encode, energyRate, make)
 
 import EnergyRate exposing (EnergyRate)
 import FoodDescription exposing (FoodDescription)
-import Json.Encode as Encode
 import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
+
 
 type Food
     = Food
@@ -15,7 +15,7 @@ type Food
 
 make : FoodDescription -> EnergyRate -> Food
 make description energyRate_ =
-    Food { description = description , energyRate = energyRate_ }
+    Food { description = description, energyRate = energyRate_ }
 
 
 energyRate : Food -> EnergyRate
@@ -28,7 +28,7 @@ encode (Food food) =
     [ ( "description", FoodDescription.encode food.description )
     , ( "energyRate", EnergyRate.encode food.energyRate )
     ]
-    |> Encode.object
+        |> Encode.object
 
 
 decode : Decoder Food

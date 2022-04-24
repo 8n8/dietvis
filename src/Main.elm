@@ -1,27 +1,25 @@
 port module Main exposing (main)
 
-
+import BodyWeight exposing (BodyWeight)
+import BodyWeightRecords exposing (BodyWeightRecords)
+import Browser
+import EnergyRate exposing (EnergyRate)
+import FatalError exposing (FatalError)
+import Food exposing (Food)
+import FoodDescription exposing (FoodDescription)
+import FoodMass exposing (FoodMass)
+import Foods exposing (Foods)
+import Html exposing (Html)
+import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
+import Meal exposing (Meal)
+import Meals exposing (Meals)
 import PageNum exposing (PageNum)
+import Task
+import Time
 import Timestamp exposing (Timestamp)
 import WaistSize exposing (WaistSize)
-import Html exposing (Html)
-import FoodDescription exposing (FoodDescription)
-import BodyWeight exposing (BodyWeight)
 import WaistSizeRecords exposing (WaistSizeRecords)
-import Task
-import Json.Encode as Encode
-import Browser
-import Time
-import EnergyRate exposing (EnergyRate)
-import Food exposing (Food)
-import Meals exposing (Meals)
-import Foods exposing (Foods)
-import BodyWeightRecords exposing (BodyWeightRecords)
-import FatalError exposing (FatalError)
-import PageNum exposing (PageNum)
-import Json.Decode as Decode exposing (Decoder)
-import Meal exposing (Meal)
-import FoodMass exposing (FoodMass)
 
 
 type Model
@@ -57,8 +55,7 @@ type Msg
 port toLocalStorage : String -> Cmd msg
 
 
-{-|
-**1480** kCal eaten in the last 24 hours
+{-| **1480** kCal eaten in the last 24 hours
 
 Food search: |#############|
 <Avocado (320 kCal / 100g)> <Aubergine (50 kCal / 100g)>
@@ -82,43 +79,44 @@ Waist size in cm: |#########|
 !!Error: waist size must be a number between 20.0 and 400.0!!
 <Submit waist size>
 
-*Body weight chart*
-0  30  60  90  120 kg
-#####################  | 25 July 2021
+_Body weight chart_
+0 30 60 90 120 kg
+##################### | 25 July 2021
 #######################| 24 July 2021
-##################     | 23 July 2021
-####################   | 22 July 2021
-#####################  | 21 July 2021
-###################    | 20 July 2021
-####################   | 19 July 2021
+################## | 23 July 2021
+#################### | 22 July 2021
+##################### | 21 July 2021
+################### | 20 July 2021
+#################### | 19 July 2021
 ###################### | 18 July 2021
 <More rows> <Less rows>
 
-*Waist size chart*
-0  30  60  90  120 cm
-#####################  | 25 July 2021
+_Waist size chart_
+0 30 60 90 120 cm
+##################### | 25 July 2021
 #######################| 24 July 2021
-##################     | 23 July 2021
-####################   | 22 July 2021
-#####################  | 21 July 2021
-###################    | 20 July 2021
-####################   | 19 July 2021
+################## | 23 July 2021
+#################### | 22 July 2021
+##################### | 21 July 2021
+################### | 20 July 2021
+#################### | 19 July 2021
 ###################### | 18 July 2021
 <More rows> <Less rows>
 
-*Calories chart*
-0 500 1000 1500 2000  kCal
-#####################  | 25 July 2021
+_Calories chart_
+0 500 1000 1500 2000 kCal
+##################### | 25 July 2021
 #######################| 24 July 2021
-##################     | 23 July 2021
-####################   | 22 July 2021
-#####################  | 21 July 2021
-###################    | 20 July 2021
-####################   | 19 July 2021
+################## | 23 July 2021
+#################### | 22 July 2021
+##################### | 21 July 2021
+################### | 20 July 2021
+#################### | 19 July 2021
 ###################### | 18 July 2021
 <More rows> <Less rows>
 
 <Download data> <Upload data>
+
 -}
 type alias OkModel =
     { foodSearchBox : String
@@ -155,6 +153,7 @@ decodeCache =
         (Decode.field "waistSizeRecords" WaistSizeRecords.decode)
         (Decode.field "meals" Meals.decode)
 
+
 main =
     Browser.element
         { init = init
@@ -164,11 +163,11 @@ main =
         }
 
 
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case model of
         Fatal error ->
-            (model, Cmd.none)
+            ( model, Cmd.none )
 
         Ok_ okModel ->
             updateOk msg okModel
@@ -180,18 +179,19 @@ dumpCache =
 
 
 encodeCache : OkModel -> String
-encodeCache {customFoods, bodyWeightRecords, waistSizeRecords, meals} =
-    [ ("customFoods", Foods.encode customFoods)
-    , ("bodyWeightRecords"
-      , BodyWeightRecords.encode bodyWeightRecords )
-    , ("waistSizeRecords", WaistSizeRecords.encode waistSizeRecords )
-    , ("meals", Meals.encode meals)
+encodeCache { customFoods, bodyWeightRecords, waistSizeRecords, meals } =
+    [ ( "customFoods", Foods.encode customFoods )
+    , ( "bodyWeightRecords"
+      , BodyWeightRecords.encode bodyWeightRecords
+      )
+    , ( "waistSizeRecords", WaistSizeRecords.encode waistSizeRecords )
+    , ( "meals", Meals.encode meals )
     ]
         |> Encode.object
         |> Encode.encode 0
 
 
-updateOk : Msg -> OkModel -> (Model, Cmd Msg)
+updateOk : Msg -> OkModel -> ( Model, Cmd Msg )
 updateOk msg model =
     case msg of
         FoodSearchBox query ->
@@ -227,15 +227,15 @@ updateOk msg model =
                     )
 
         MealWeightBox mealWeightBox ->
-            (Ok_ { model | mealWeightBox = mealWeightBox }, Cmd.none)
+            ( Ok_ { model | mealWeightBox = mealWeightBox }, Cmd.none )
 
         SubmitMeal ->
-            (Ok_ model, Task.perform MealTime Time.now)
+            ( Ok_ model, Task.perform MealTime Time.now )
 
         MealTime posix ->
             case model.selectedFood of
                 Nothing ->
-                    (Ok_ model, Cmd.none)
+                    ( Ok_ model, Cmd.none )
 
                 Just selectedFood ->
                     case
@@ -246,7 +246,7 @@ updateOk msg model =
                             }
                     of
                         Err _ ->
-                            (Ok_ model, Cmd.none)
+                            ( Ok_ model, Cmd.none )
 
                         Ok meal ->
                             let
@@ -258,7 +258,7 @@ updateOk msg model =
                                                 model.meals
                                     }
                             in
-                            ( Ok_ newModel, dumpCache newModel)
+                            ( Ok_ newModel, dumpCache newModel )
 
         SubmitNewFood ->
             case
@@ -268,7 +268,7 @@ updateOk msg model =
                     }
             of
                 Err _ ->
-                    (Ok_ model, Cmd.none)
+                    ( Ok_ model, Cmd.none )
 
                 Ok food ->
                     let
@@ -280,10 +280,10 @@ updateOk msg model =
                                         model.customFoods
                             }
                     in
-                    (Ok_ newModel, dumpCache newModel)
+                    ( Ok_ newModel, dumpCache newModel )
 
         NewFoodDescriptionBox box ->
-            ( Ok_ { model | newFoodDescriptionBox = box }, Cmd.none)
+            ( Ok_ { model | newFoodDescriptionBox = box }, Cmd.none )
 
         NewFoodEnergyBox box ->
             ( Ok_ { model | newFoodEnergyBox = box }, Cmd.none )
@@ -292,12 +292,12 @@ updateOk msg model =
             ( Ok_ { model | bodyWeightBox = box }, Cmd.none )
 
         SubmitBodyWeight ->
-            (Ok_ model, Task.perform BodyWeightTime Time.now)
+            ( Ok_ model, Task.perform BodyWeightTime Time.now )
 
         BodyWeightTime posix ->
             case BodyWeight.fromKgString model.bodyWeightBox of
                 Err _ ->
-                    (Ok_ model, Cmd.none)
+                    ( Ok_ model, Cmd.none )
 
                 Ok bodyWeight ->
                     let
@@ -310,18 +310,18 @@ updateOk msg model =
                                         model.bodyWeightRecords
                             }
                     in
-                        ( Ok_ newModel, dumpCache newModel )
+                    ( Ok_ newModel, dumpCache newModel )
 
         WaistSizeBox box ->
             ( Ok_ { model | waistSizeBox = box }, Cmd.none )
 
         SubmitWaistSize ->
-            (Ok_ model, Task.perform WaistSizeTime Time.now)
+            ( Ok_ model, Task.perform WaistSizeTime Time.now )
 
         WaistSizeTime posix ->
             case WaistSize.fromCmString model.waistSizeBox of
                 Err _ ->
-                    (Ok_ model, Cmd.none)
+                    ( Ok_ model, Cmd.none )
 
                 Ok waistSize ->
                     let
@@ -334,30 +334,32 @@ updateOk msg model =
                                         model.waistSizeRecords
                             }
                     in
-                        (Ok_ newModel, dumpCache newModel)
+                    ( Ok_ newModel, dumpCache newModel )
 
         OneMoreBodyWeightPage ->
             case PageNum.plus1 model.bodyWeightsPage of
                 Err err ->
-                    (Fatal (FatalError.fromString err), Cmd.none)
+                    ( Fatal (FatalError.fromString err), Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | bodyWeightsPage = newPage }
-                    , Cmd.none)
+                    , Cmd.none
+                    )
 
         OneLessBodyWeightPage ->
             case PageNum.minus1 model.bodyWeightsPage of
                 Err err ->
-                    (Fatal (FatalError.fromString err), Cmd.none)
+                    ( Fatal (FatalError.fromString err), Cmd.none )
 
                 Ok newPage ->
-                    (Ok_ { model | bodyWeightsPage = newPage}
-                    , Cmd.none)
+                    ( Ok_ { model | bodyWeightsPage = newPage }
+                    , Cmd.none
+                    )
 
         OneMoreWaistSizePage ->
             case PageNum.plus1 model.waistSizesPage of
                 Err err ->
-                    (Fatal (FatalError.fromString err), Cmd.none)
+                    ( Fatal (FatalError.fromString err), Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | waistSizesPage = newPage }
@@ -367,7 +369,7 @@ updateOk msg model =
         OneLessWaistSizePage ->
             case PageNum.minus1 model.waistSizesPage of
                 Err err ->
-                    (Fatal (FatalError.fromString err), Cmd.none)
+                    ( Fatal (FatalError.fromString err), Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | waistSizesPage = newPage }
@@ -377,16 +379,17 @@ updateOk msg model =
         OneMoreMealsPage ->
             case PageNum.plus1 model.mealsPage of
                 Err err ->
-                    (Fatal (FatalError.fromString err), Cmd.none)
+                    ( Fatal (FatalError.fromString err), Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | mealsPage = newPage }
-                    , Cmd.none )
+                    , Cmd.none
+                    )
 
         OneLessMealsPage ->
             case PageNum.minus1 model.mealsPage of
                 Err err ->
-                    (Fatal (FatalError.fromString err), Cmd.none)
+                    ( Fatal (FatalError.fromString err), Cmd.none )
 
                 Ok newPage ->
                     ( Ok_ { model | mealsPage = newPage }
@@ -407,16 +410,16 @@ makeFood { description, energy } =
         , EnergyRate.fromKcalPer100gString energy
         )
     of
-        (Err err, Err _) ->
+        ( Err err, Err _ ) ->
             Err err
 
-        (Ok _, Err err) ->
+        ( Ok _, Err err ) ->
             Err err
 
-        (Err err, Ok _) ->
+        ( Err err, Ok _ ) ->
             Err err
 
-        (Ok description_, Ok energy_) ->
+        ( Ok description_, Ok energy_ ) ->
             Ok (Food.make description_ energy_)
 
 
@@ -446,14 +449,15 @@ subscriptions _ =
     Sub.none
 
 
-init : Decode.Value -> (Model, Cmd Msg)
+init : Decode.Value -> ( Model, Cmd Msg )
 init flags =
     case Decode.decodeValue (Decode.nullable decodeCache) flags of
         Err err ->
             ( Fatal (FatalError.fromString (Decode.errorToString err))
-            , Cmd.none)
+            , Cmd.none
+            )
 
-        Ok (Just {customFoods, bodyWeightRecords, waistSizeRecords, meals}) ->
+        Ok (Just { customFoods, bodyWeightRecords, waistSizeRecords, meals }) ->
             ( { foodSearchBox = ""
               , customFoods = customFoods
               , foodSearchResultsPage = PageNum.first
@@ -470,7 +474,7 @@ init flags =
               , meals = meals
               , mealsPage = PageNum.first
               }
-              |> Ok_
+                |> Ok_
             , Cmd.none
             )
 
@@ -491,7 +495,7 @@ init flags =
               , newFoodDescriptionBox = ""
               , newFoodEnergyBox = ""
               }
-              |> Ok_
+                |> Ok_
             , Cmd.none
             )
 

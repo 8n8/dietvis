@@ -1,14 +1,14 @@
-module Meal exposing (Meal, encode, decode, make)
+module Meal exposing (Meal, decode, encode, make)
 
-import Timestamp exposing (Timestamp)
 import EnergyRate exposing (EnergyRate)
 import FoodMass exposing (FoodMass)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
+import Timestamp exposing (Timestamp)
 
 
-type Meal =
-    Meal
+type Meal
+    = Meal
         { timestamp : Timestamp
         , energyRate : EnergyRate
         , foodMass : FoodMass
@@ -33,9 +33,9 @@ decode =
 
 
 encode : Meal -> Encode.Value
-encode (Meal {timestamp, energyRate, foodMass}) =
-    [ ( "timestamp", Timestamp.encode timestamp)
-    , ( "energyRate", EnergyRate.encode energyRate)
-    , ("foodMass", FoodMass.encode foodMass)
+encode (Meal { timestamp, energyRate, foodMass }) =
+    [ ( "timestamp", Timestamp.encode timestamp )
+    , ( "energyRate", EnergyRate.encode energyRate )
+    , ( "foodMass", FoodMass.encode foodMass )
     ]
-    |> Encode.object
+        |> Encode.object

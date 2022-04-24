@@ -1,11 +1,11 @@
 module WaistSize exposing (WaistSize, decode, encode, fromCmString)
 
-
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 
 
-{-| mm -}
+{-| mm
+-}
 type WaistSize
     = WaistSize Int
 
@@ -38,7 +38,8 @@ fromCmString raw =
 
         Just f ->
             let
-                asInt = round (f * 10)
+                asInt =
+                    round (f * 10)
             in
             if asInt < minWaistSize then
                 Err "too low"

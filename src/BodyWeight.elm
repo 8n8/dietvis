@@ -4,7 +4,8 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 
 
-{-| 0.1 kg -}
+{-| 0.1 kg
+-}
 type BodyWeight
     = BodyWeight Int
 
@@ -37,13 +38,14 @@ fromKgString raw =
 
         Just f ->
             let
-                asInt = round (f * 10)
+                asInt =
+                    round (f * 10)
             in
-                if asInt > maxBodyWeight then
-                    Err "too high"
+            if asInt > maxBodyWeight then
+                Err "too high"
 
-                else if asInt < minBodyWeight then
-                    Err "too low"
+            else if asInt < minBodyWeight then
+                Err "too low"
 
-                else
-                    Ok (BodyWeight asInt)
+            else
+                Ok (BodyWeight asInt)

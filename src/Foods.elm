@@ -1,11 +1,10 @@
 module Foods exposing (Foods, decode, empty, encode, insert)
 
-
-import Json.Encode as Encode
-import Json.Decode as Decode exposing (Decoder)
 import EnergyRate exposing (EnergyRate)
-import FoodDescription exposing (FoodDescription)
 import Food exposing (Food)
+import FoodDescription exposing (FoodDescription)
+import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode
 
 
 type Foods
