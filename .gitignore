@@ -10,3 +10,4 @@ diet.out
 diet.pdf
 diet.run.xml
 diet.tex
+dist/elm.js

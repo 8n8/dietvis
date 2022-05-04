@@ -54,14 +54,14 @@ fromGramString : String -> Result String FoodMass
 fromGramString raw =
     case String.toInt raw of
         Nothing ->
-            Err "a food weight must be a whole number"
+            Err "not a whole number"
 
         Just intGrams ->
             if intGrams < 0 then
-                Err "a food weight must be a positive number"
+                Err "not a positive number"
 
             else if intGrams > maxMass then
-                Err "a food weight must not be more than 10kg"
+                Err "too high"
 
             else if intGrams < minMass then
                 Err "too low"

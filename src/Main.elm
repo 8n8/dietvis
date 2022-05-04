@@ -72,7 +72,11 @@ type Msg
 port toLocalStorage : String -> Cmd msg
 
 
-{-| **1480** kCal eaten today
+{-| 
+A rough ASCII art design of the UI:
+
+```
+**1480** kCal eaten today
 
 Food search: |#############|
 <Avocado (320 kCal / 100g)> <Aubergine (50 kCal / 100g)>
@@ -98,42 +102,42 @@ Waist size in cm: |#########|
 
 _Body weight chart_
 0 30 60 90 120 kg
-##################### | 25 July 2021
+#####################  | 25 July 2021
 #######################| 24 July 2021
-################## | 23 July 2021
-#################### | 22 July 2021
-##################### | 21 July 2021
-################### | 20 July 2021
-#################### | 19 July 2021
+##################     | 23 July 2021
+####################   | 22 July 2021
+#####################  | 21 July 2021
+###################    | 20 July 2021
+####################   | 19 July 2021
 ###################### | 18 July 2021
 <More rows> <Less rows>
 
 _Waist size chart_
 0 30 60 90 120 cm
-##################### | 25 July 2021
+#####################  | 25 July 2021
 #######################| 24 July 2021
-################## | 23 July 2021
-#################### | 22 July 2021
-##################### | 21 July 2021
-################### | 20 July 2021
-#################### | 19 July 2021
+##################     | 23 July 2021
+####################   | 22 July 2021
+#####################  | 21 July 2021
+###################    | 20 July 2021
+####################   | 19 July 2021
 ###################### | 18 July 2021
 <More rows> <Less rows>
 
 _Calories chart_
 0 500 1000 1500 2000 kCal
-##################### | 25 July 2021
+#####################  | 25 July 2021
 #######################| 24 July 2021
-################## | 23 July 2021
-#################### | 22 July 2021
-##################### | 21 July 2021
-################### | 20 July 2021
-#################### | 19 July 2021
+##################     | 23 July 2021
+####################   | 22 July 2021
+#####################  | 21 July 2021
+###################    | 20 July 2021
+####################   | 19 July 2021
 ###################### | 18 July 2021
 <More rows> <Less rows>
 
 <Download data> <Upload data>
-
+```
 -}
 type alias OkModel =
     { foodSearchBox : String
@@ -516,7 +520,11 @@ updateOk msg model =
                     )
 
         MealWeightBox contents ->
-            ( Ok_ { model | mealWeightBox = contents }, Cmd.none )
+            ( Ok_
+                { model
+                    | mealWeightBox = contents
+                    , mealNotification = Off
+                }, Cmd.none )
 
         SubmitMeal ->
             case model.selectedFood of
@@ -575,13 +583,26 @@ updateOk msg model =
                     )
 
         NewFoodDescriptionBox box ->
-            ( Ok_ { model | newFoodDescriptionBox = box }, Cmd.none )
+            ( Ok_
+                { model
+                    | newFoodDescriptionBox = box
+                    , foodNotification = Off
+                }, Cmd.none )
 
         NewFoodEnergyBox box ->
-            ( Ok_ { model | newFoodEnergyBox = box }, Cmd.none )
+            ( Ok_
+                { model
+                    | newFoodEnergyBox = box
+                    , foodNotification = Off
+                }
+            , Cmd.none )
 
         BodyWeightBox box ->
-            ( Ok_ { model | bodyWeightBox = box }, Cmd.none )
+            ( Ok_
+                { model
+                    | bodyWeightBox = box
+                    , bodyWeightNotification = Off
+                }, Cmd.none )
 
         SubmitBodyWeight ->
             Result.map
@@ -602,7 +623,11 @@ updateOk msg model =
                     |> Result.withDefault (Ok_ model, Cmd.none)
 
         WaistSizeBox box ->
-            ( Ok_ { model | waistSizeBox = box }, Cmd.none )
+            ( Ok_
+                { model
+                    | waistSizeBox = box
+                    , waistSizeNotification = Off
+                    }, Cmd.none )
 
         SubmitWaistSize ->
             case WaistSize.fromCmString model.waistSizeBox of
@@ -842,12 +867,23 @@ viewOk model =
             ]
 
 
+saved notificationStatus =
+        case notificationStatus of
+            On ->
+                Element.el
+                    [Background.color yellow]
+                    (Element.text "saved")
+                    |> List.singleton
+
+            Off -> []
+
+
 bodyWeightView : String -> NotificationStatus -> Element Msg
 bodyWeightView bodyWeightBox notificationStatus =
         [   { onChange = BodyWeightBox
             , label =
                 
-                Element.text "New body weight in kg:"
+                Element.text "Body weight in kg:"
                 |> Input.labelLeft [] 
             , placeholder = Nothing
             , text = bodyWeightBox
@@ -856,48 +892,36 @@ bodyWeightView bodyWeightBox notificationStatus =
             |> List.singleton
         , boxErr bodyWeightBox BodyWeight.fromKgString
             |> List.singleton
-        ,   { onPress = Just SubmitBodyWeight
-            , label = Element.text "Record new body weight"
-            }
-            |> Input.button submitButtonStyle
-            |> List.singleton
-        , case notificationStatus of
-            On ->
-                Element.el
-                    [Background.color yellow]
-                    (Element.text "body weight recorded")
-                    |> List.singleton
-
-            Off -> []
+        , saveButton SubmitBodyWeight
+        , saved notificationStatus
         ]
         |> List.concat
         |> Element.wrappedRow [ Element.spacing 8 ]
+
+
+saveButton msg =
+    {onPress = Just msg
+    , label = Element.text "Save"
+    }
+      |> Input.button lessMoreStyle
+      |> List.singleton
 
 
 waistSizeView : String -> NotificationStatus -> Element Msg
 waistSizeView waistSizeBox notificationStatus =
     [ { onChange = WaistSizeBox
       , label =
-        Element.text "New waist size in cm:"
+        Element.text "Waist size in cm:"
         |> Input.labelLeft [] 
       , placeholder = Nothing
       , text = waistSizeBox
       }
       |> Input.text [ Element.width (Element.px 100) ]
       |> List.singleton
+    , saveButton SubmitWaistSize
     , boxErr waistSizeBox WaistSize.fromCmString
       |> List.singleton
-    , {onPress = Just SubmitWaistSize
-      , label = Element.text "Record a new waist size"
-      }
-      |> Input.button submitButtonStyle
-      |> List.singleton
-    , case notificationStatus of
-        On ->
-            Element.text "waist size recorded"
-            |> Element.el [ Background.color yellow ]
-            |> List.singleton
-        Off -> []
+    , saved notificationStatus
     ]
     |> List.concat
     |> Element.wrappedRow [ Element.spacing 8 ]
@@ -909,17 +933,16 @@ makeNewFoodView description energy notificationStatus =
             , label =
                 Input.labelLeft
                     []
-                    (Element.text "New food description:")
+                    (Element.text "Food description:")
             , placeholder = Nothing
             , text = description
-            }
-            |> Input.text [ Element.width (Element.px 400) ]
+            } |> Input.text [ Element.width (Element.px 400) ]
             |> List.singleton
         , boxErr description FoodDescription.fromString
             |> List.singleton
         ,   { onChange = NewFoodEnergyBox
             , label =
-                Input.labelLeft [] (Element.text "New food energy:")
+                Input.labelLeft [] (Element.text "Food energy:")
             , placeholder = Nothing
             , text = energy
             }
@@ -927,19 +950,8 @@ makeNewFoodView description energy notificationStatus =
             |> List.singleton
         , boxErr energy EnergyRate.fromKcalPer100gString
             |> List.singleton
-        ,   { onPress = Just SubmitNewFood
-            , label = Element.text "Record new food"
-            }
-            |> Input.button submitButtonStyle
-            |> List.singleton
-        , case notificationStatus of
-            On ->
-                Element.el
-                    [Background.color yellow]
-                    (Element.text "new food recorded")
-                    |> List.singleton
-
-            Off -> []
+        , saveButton SubmitNewFood
+        , saved notificationStatus
         ]
             |> List.concat
             |> Element.wrappedRow [Element.spacing 8 ]
@@ -962,15 +974,8 @@ makeNewMealView selectedFood mealWeightBox notificationStatus =
                 [ selectedFoodView selectedFood_
                 ,   [ mealWeightBoxView mealWeightBox |> List.singleton
                     , mealWeightBoxError mealWeightBox |> List.singleton
-                    , submitMealButton |> List.singleton
-                    , case notificationStatus of
-                        On ->
-                            Element.el
-                                [Background.color yellow]
-                                (Element.text "meal recorded")
-                                |> List.singleton
-
-                        Off -> []
+                    , saveButton SubmitMeal
+                    , saved notificationStatus
                     ]
                     |> List.concat
                     |> Element.wrappedRow [Element.spacing 8]
