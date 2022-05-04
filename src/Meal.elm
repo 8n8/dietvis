@@ -1,5 +1,6 @@
-module Meal exposing (Meal, decode, encode, make)
+module Meal exposing (Meal, decode, encode, energy, make, timestamp)
 
+import Energy exposing (Energy)
 import EnergyRate exposing (EnergyRate)
 import FoodMass exposing (FoodMass)
 import Json.Decode as Decode exposing (Decoder)
@@ -15,10 +16,30 @@ type Meal
         }
 
 
+timestamp : Meal -> Timestamp
+timestamp (Meal meal) =
+    meal.timestamp
+
+
+energy : Meal -> Energy
+energy (Meal { energyRate, foodMass }) =
+    let
+        denominator =
+            EnergyRate.denominator energyRate
+
+        ratio =
+            FoodMass.ratio foodMass denominator
+
+        energy_ =
+            EnergyRate.energy energyRate
+    in
+    Energy.scale ratio energy_
+
+
 make : Timestamp -> EnergyRate -> FoodMass -> Meal
-make timestamp energyRate foodMass =
+make timestamp_ energyRate foodMass =
     Meal
-        { timestamp = timestamp
+        { timestamp = timestamp_
         , energyRate = energyRate
         , foodMass = foodMass
         }
@@ -33,9 +54,9 @@ decode =
 
 
 encode : Meal -> Encode.Value
-encode (Meal { timestamp, energyRate, foodMass }) =
-    [ ( "timestamp", Timestamp.encode timestamp )
-    , ( "energyRate", EnergyRate.encode energyRate )
-    , ( "foodMass", FoodMass.encode foodMass )
+encode (Meal meal) =
+    [ ( "timestamp", Timestamp.encode meal.timestamp )
+    , ( "energyRate", EnergyRate.encode meal.energyRate )
+    , ( "foodMass", FoodMass.encode meal.foodMass )
     ]
         |> Encode.object

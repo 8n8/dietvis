@@ -1,4 +1,11 @@
-module FoodMass exposing (FoodMass, decode, encode, fromGramString, hundredGrams)
+module FoodMass exposing
+    ( FoodMass
+    , decode
+    , encode
+    , fromGramString
+    , hundredGrams
+    , ratio
+    )
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
@@ -8,6 +15,11 @@ import Json.Encode as Encode
 -}
 type FoodMass
     = FoodMass Int
+
+
+ratio : FoodMass -> FoodMass -> Float
+ratio (FoodMass a) (FoodMass b) =
+    toFloat a / toFloat b
 
 
 hundredGrams : FoodMass
@@ -33,6 +45,11 @@ maxMass =
     10000
 
 
+minMass : Int
+minMass =
+    1
+
+
 fromGramString : String -> Result String FoodMass
 fromGramString raw =
     case String.toInt raw of
@@ -45,6 +62,9 @@ fromGramString raw =
 
             else if intGrams > maxMass then
                 Err "a food weight must not be more than 10kg"
+
+            else if intGrams < minMass then
+                Err "too low"
 
             else
                 Ok (FoodMass intGrams)

@@ -1,7 +1,10 @@
 module EnergyRate exposing
     ( EnergyRate
+    , builtIns
     , decode
+    , denominator
     , encode
+    , energy
     , fromKcalPer100gString
     )
 
@@ -15,6 +18,16 @@ type EnergyRate
     = EnergyRate Energy FoodMass
 
 
+energy : EnergyRate -> Energy
+energy (EnergyRate e _) =
+    e
+
+
+denominator : EnergyRate -> FoodMass
+denominator (EnergyRate _ m) =
+    m
+
+
 decode : Decoder EnergyRate
 decode =
     Decode.map2 EnergyRate
@@ -23,8 +36,8 @@ decode =
 
 
 encode : EnergyRate -> Encode.Value
-encode (EnergyRate energy foodMass) =
-    [ ( "energy", Energy.encode energy )
+encode (EnergyRate energy_ foodMass) =
+    [ ( "energy", Energy.encode energy_ )
     , ( "foodMass", FoodMass.encode foodMass )
     ]
         |> Encode.object
@@ -36,5 +49,12 @@ fromKcalPer100gString raw =
         Err err ->
             Err err
 
-        Ok energy ->
-            Ok (EnergyRate energy FoodMass.hundredGrams)
+        Ok energy_ ->
+            Ok (EnergyRate energy_ FoodMass.hundredGrams)
+
+
+builtIns : List EnergyRate
+builtIns =
+    List.map
+        (\e -> EnergyRate e FoodMass.hundredGrams)
+        Energy.builtIns

@@ -1,7 +1,14 @@
 port module Main exposing (main)
 
 import BodyWeight exposing (BodyWeight)
+import Element.Input as Input
 import BodyWeightRecords exposing (BodyWeightRecords)
+import Element.Region as Region
+import Element exposing (Element)
+import Element.Font as Font exposing (Font)
+import Energy exposing (Energy)
+import Element.Border as Border
+import Element.Background as Background
 import Browser
 import EnergyRate exposing (EnergyRate)
 import File as File exposing (File)
@@ -22,15 +29,22 @@ import Time
 import Timestamp exposing (Timestamp)
 import WaistSize exposing (WaistSize)
 import WaistSizeRecords exposing (WaistSizeRecords)
+import Process
 
 
 type Model
     = Fatal String
+    | LoadingZoneAndTime Cache
+    | LoadingZone Cache Timestamp
+    | LoadingTime Cache Time.Zone
     | Ok_ OkModel
 
 
 type Msg
     = FoodSearchBox String
+    | BadTimestamp
+    | Now Timestamp
+    | Zone Time.Zone
     | FoodSearchResultClick Food
     | OneMoreFoodSearchPage
     | OneLessFoodSearchPage
@@ -49,9 +63,6 @@ type Msg
     | OneLessWaistSizePage
     | OneMoreMealsPage
     | OneLessMealsPage
-    | MealTime Time.Posix
-    | BodyWeightTime Time.Posix
-    | WaistSizeTime Time.Posix
     | DownloadData
     | UploadData
     | SelectedFile File
@@ -61,7 +72,7 @@ type Msg
 port toLocalStorage : String -> Cmd msg
 
 
-{-| **1480** kCal eaten in the last 24 hours
+{-| **1480** kCal eaten today
 
 Food search: |#############|
 <Avocado (320 kCal / 100g)> <Aubergine (50 kCal / 100g)>
@@ -128,6 +139,10 @@ type alias OkModel =
     { foodSearchBox : String
     , fileUploadStatus : FileUploadStatus
     , customFoods : Foods
+    , mealNotification : NotificationStatus
+    , foodNotification : NotificationStatus
+    , bodyWeightNotification : NotificationStatus
+    , waistSizeNotification : NotificationStatus
     , foodSearchResultsPage : PageNum
     , selectedFood : Maybe Food
     , mealWeightBox : String
@@ -141,6 +156,8 @@ type alias OkModel =
     , waistSizesPage : PageNum
     , meals : Meals
     , mealsPage : PageNum
+    , now : Timestamp
+    , zone : Time.Zone
     }
 
 
@@ -149,18 +166,40 @@ type FileUploadStatus
     | NoProblems
 
 
-type alias Cache =
-    { customFoods : Foods
-    , bodyWeightRecords : BodyWeightRecords
-    , waistSizeRecords : WaistSizeRecords
-    , meals : Meals
-    }
+type Cache
+    = Empty
+    | NonEmpty NonEmptyCache
+
+
+type alias NonEmptyCache =
+        { customFoods : Foods
+        , bodyWeightRecords : BodyWeightRecords
+        , waistSizeRecords : WaistSizeRecords
+        , meals : Meals
+        }
 
 
 decodeCache : Decoder Cache
 decodeCache =
-    Decode.map4 Cache
-        (Decode.field "foods" Foods.decode)
+    (Decode.nullable Decode.string) |> Decode.andThen
+        (\maybeStr ->
+            case maybeStr of
+                Nothing ->
+                    Decode.succeed Empty
+
+                Just str ->
+                    case Decode.decodeString decodeNonEmptyCache str of
+                        Err err ->
+                            Decode.fail (Decode.errorToString err)
+
+                        Ok cache ->
+                            Decode.succeed (NonEmpty cache))
+
+
+decodeNonEmptyCache : Decoder NonEmptyCache
+decodeNonEmptyCache =
+    Decode.map4 NonEmptyCache
+        (Decode.field "customFoods" Foods.decode)
         (Decode.field "bodyWeightRecords" BodyWeightRecords.decode)
         (Decode.field "waistSizeRecords" WaistSizeRecords.decode)
         (Decode.field "meals" Meals.decode)
@@ -181,8 +220,191 @@ update msg model =
         Fatal error ->
             ( model, Cmd.none )
 
+        LoadingZoneAndTime cache ->
+            updateLoadingZoneAndTime cache msg
+
+        LoadingZone cache time ->
+            updateLoadingZone cache time msg
+
+        LoadingTime cache zone ->
+            updateLoadingTime cache zone msg
+
         Ok_ okModel ->
             updateOk msg okModel
+
+
+updateLoadingTime : Cache -> Time.Zone -> Msg -> (Model, Cmd Msg)
+updateLoadingTime cache zone msg =
+    let
+        nothing = (LoadingTime cache zone, Cmd.none)
+    in
+    case msg of
+        Now time ->
+            (initModelHelp cache zone time |> Ok_, Cmd.none)
+
+        FoodSearchBox _ -> nothing
+        BadTimestamp -> nothing
+        Zone _ -> nothing
+        FoodSearchResultClick _ -> nothing
+        OneMoreFoodSearchPage -> nothing
+        OneLessFoodSearchPage -> nothing
+        MealWeightBox _ -> nothing
+        SubmitMeal -> nothing
+        NewFoodDescriptionBox _ -> nothing
+        NewFoodEnergyBox _ -> nothing
+        SubmitNewFood -> nothing
+        BodyWeightBox _ -> nothing
+        SubmitBodyWeight -> nothing
+        WaistSizeBox _ -> nothing
+        SubmitWaistSize -> nothing
+        OneMoreBodyWeightPage -> nothing
+        OneLessBodyWeightPage -> nothing
+        OneMoreWaistSizePage -> nothing
+        OneLessWaistSizePage -> nothing
+        OneMoreMealsPage -> nothing
+        OneLessMealsPage -> nothing
+        DownloadData -> nothing
+        UploadData -> nothing
+        SelectedFile _ -> nothing
+        FileLoaded _ -> nothing
+
+
+initModelHelp : Cache -> Time.Zone -> Timestamp -> OkModel
+initModelHelp cache zone now =
+              { foodSearchBox = ""
+              , now = now
+              , zone = zone
+              , customFoods =
+                case cache of
+                    Empty ->
+                        Foods.empty
+
+                    NonEmpty {customFoods} ->
+                        customFoods
+              , foodSearchResultsPage = PageNum.empty
+              , selectedFood = Nothing
+              , bodyWeightBox = ""
+              , waistSizeBox = ""
+              , bodyWeightRecords =
+                case cache of
+                    Empty ->
+                        BodyWeightRecords.empty
+
+                    NonEmpty {bodyWeightRecords} ->
+                        bodyWeightRecords
+              , bodyWeightsPage = PageNum.empty
+              , waistSizeRecords =
+                case cache of
+                    Empty ->
+                        WaistSizeRecords.empty
+
+                    NonEmpty {waistSizeRecords} ->
+                        waistSizeRecords
+              , waistSizesPage = PageNum.empty
+              , meals =
+                case cache of
+                    Empty ->
+                        Meals.empty
+
+                    NonEmpty {meals} ->
+                        meals
+              , mealsPage = PageNum.empty
+              , mealWeightBox = ""
+              , newFoodDescriptionBox = ""
+              , newFoodEnergyBox = ""
+              , fileUploadStatus = NoProblems
+              , mealNotification = Off
+              , foodNotification = Off
+              , bodyWeightNotification = Off
+              , waistSizeNotification = Off
+              }
+
+
+updateLoadingZone : Cache -> Timestamp -> Msg -> (Model, Cmd Msg)
+updateLoadingZone cache timestamp msg =
+    let
+        nothing = (LoadingZone cache timestamp, Cmd.none)
+    in
+    case msg of
+        Zone zone ->
+            (initModelHelp cache zone timestamp |> Ok_, Cmd.none)
+
+        FoodSearchBox _ ->
+            nothing
+
+        BadTimestamp ->
+            nothing
+
+        Now _ ->
+            nothing
+
+        FoodSearchResultClick _ ->
+            nothing
+
+        OneMoreFoodSearchPage ->
+            nothing
+
+        OneLessFoodSearchPage ->
+            nothing
+
+        MealWeightBox _ -> nothing
+        SubmitMeal -> nothing
+        NewFoodDescriptionBox _ -> nothing
+        NewFoodEnergyBox _ -> nothing
+        SubmitNewFood -> nothing
+        BodyWeightBox _ -> nothing
+        SubmitBodyWeight -> nothing
+        WaistSizeBox _ -> nothing
+        SubmitWaistSize -> nothing
+        OneMoreBodyWeightPage -> nothing
+        OneLessBodyWeightPage -> nothing
+        OneMoreWaistSizePage -> nothing
+        OneLessWaistSizePage -> nothing
+        OneMoreMealsPage -> nothing
+        OneLessMealsPage -> nothing
+        DownloadData -> nothing
+        UploadData -> nothing
+        SelectedFile _ -> nothing
+        FileLoaded _ -> nothing
+
+
+
+updateLoadingZoneAndTime : Cache -> Msg -> (Model, Cmd Msg)
+updateLoadingZoneAndTime cache msg =
+    let
+        nothing = (LoadingZoneAndTime cache, Cmd.none)
+    in
+    case msg of
+        Now time ->
+            (LoadingZone cache time, Cmd.none)
+
+        Zone zone ->
+            (LoadingTime cache zone, Cmd.none)
+
+        FoodSearchBox _ -> nothing
+        BadTimestamp -> nothing
+        FoodSearchResultClick _ -> nothing
+        OneMoreFoodSearchPage -> nothing
+        OneLessFoodSearchPage -> nothing
+        MealWeightBox _ -> nothing
+        SubmitMeal -> nothing
+        NewFoodDescriptionBox _ -> nothing
+        NewFoodEnergyBox _ -> nothing
+        SubmitNewFood -> nothing
+        BodyWeightBox _ -> nothing
+        SubmitBodyWeight -> nothing
+        WaistSizeBox _ -> nothing
+        SubmitWaistSize -> nothing
+        OneMoreBodyWeightPage -> nothing
+        OneLessBodyWeightPage -> nothing
+        OneMoreWaistSizePage -> nothing
+        OneLessWaistSizePage -> nothing
+        OneMoreMealsPage -> nothing
+        OneLessMealsPage -> nothing
+        DownloadData -> nothing
+        UploadData -> nothing
+        SelectedFile _ -> nothing
+        FileLoaded _ -> nothing
 
 
 dumpCache : OkModel -> Cmd Msg
@@ -223,7 +445,7 @@ updateOk msg model =
             ( Ok_ model, Task.perform FileLoaded (File.toString file) )
 
         FileLoaded raw ->
-            case Decode.decodeString decodeCache raw of
+            case Decode.decodeString decodeNonEmptyCache raw of
                 Err err ->
                     ( Ok_ { model | fileUploadStatus = BadFile }
                     , Cmd.none
@@ -242,10 +464,34 @@ updateOk msg model =
                     ( Ok_ newModel, dumpCache newModel )
 
         FoodSearchBox query ->
-            ( Ok_ { model | foodSearchBox = query }, Cmd.none )
+            let
+                pageNumR : Result String PageNum
+                pageNumR =
+                    foodSearch model.customFoods query
+                    |> List.length
+                    |> totalPages
+                    |> PageNum.first
+            in
+            case pageNumR of
+                Err err ->
+                    ( Fatal err, Cmd.none)
+
+                Ok p ->
+                    ( Ok_
+                        { model
+                            | foodSearchBox = query
+                            , foodSearchResultsPage = p
+                        }
+                    , Cmd.none )
 
         FoodSearchResultClick food ->
-            ( Ok_ { model | selectedFood = Just food }, Cmd.none )
+            ( Ok_
+                { model
+                    | selectedFood = Just food
+                    , foodSearchBox = ""
+                    , foodSearchResultsPage = PageNum.empty
+                }
+            , Cmd.none )
 
         OneMoreFoodSearchPage ->
             case PageNum.plus1 model.foodSearchResultsPage of
@@ -269,13 +515,10 @@ updateOk msg model =
                     , Cmd.none
                     )
 
-        MealWeightBox mealWeightBox ->
-            ( Ok_ { model | mealWeightBox = mealWeightBox }, Cmd.none )
+        MealWeightBox contents ->
+            ( Ok_ { model | mealWeightBox = contents }, Cmd.none )
 
         SubmitMeal ->
-            ( Ok_ model, Task.perform MealTime Time.now )
-
-        MealTime posix ->
             case model.selectedFood of
                 Nothing ->
                     ( Ok_ model, Cmd.none )
@@ -285,7 +528,7 @@ updateOk msg model =
                         makeMeal
                             { mealWeight = model.mealWeightBox
                             , food = selectedFood
-                            , time = posix
+                            , time = model.now
                             }
                     of
                         Err _ ->
@@ -299,9 +542,12 @@ updateOk msg model =
                                             Meals.insert
                                                 meal
                                                 model.meals
+                                        , mealNotification = On
                                     }
                             in
-                            ( Ok_ newModel, dumpCache newModel )
+                            ( Ok_ newModel
+                            , dumpCache newModel
+                            )
 
         SubmitNewFood ->
             case
@@ -321,9 +567,12 @@ updateOk msg model =
                                     Foods.insert
                                         food
                                         model.customFoods
+                                , foodNotification = On
                             }
                     in
-                    ( Ok_ newModel, dumpCache newModel )
+                    ( Ok_ newModel
+                    , dumpCache newModel
+                    )
 
         NewFoodDescriptionBox box ->
             ( Ok_ { model | newFoodDescriptionBox = box }, Cmd.none )
@@ -335,33 +584,27 @@ updateOk msg model =
             ( Ok_ { model | bodyWeightBox = box }, Cmd.none )
 
         SubmitBodyWeight ->
-            ( Ok_ model, Task.perform BodyWeightTime Time.now )
-
-        BodyWeightTime posix ->
-            case BodyWeight.fromKgString model.bodyWeightBox of
-                Err _ ->
-                    ( Ok_ model, Cmd.none )
-
-                Ok bodyWeight ->
+            Result.map
+                (\bodyWeight ->
                     let
                         newModel =
                             { model
                                 | bodyWeightRecords =
                                     BodyWeightRecords.insert
-                                        (Timestamp.fromPosix posix)
+                                        model.now
                                         bodyWeight
                                         model.bodyWeightRecords
+                                , bodyWeightNotification = On
                             }
                     in
-                    ( Ok_ newModel, dumpCache newModel )
+                    ( Ok_ newModel, dumpCache newModel ))
+                    (BodyWeight.fromKgString model.bodyWeightBox)
+                    |> Result.withDefault (Ok_ model, Cmd.none)
 
         WaistSizeBox box ->
             ( Ok_ { model | waistSizeBox = box }, Cmd.none )
 
         SubmitWaistSize ->
-            ( Ok_ model, Task.perform WaistSizeTime Time.now )
-
-        WaistSizeTime posix ->
             case WaistSize.fromCmString model.waistSizeBox of
                 Err _ ->
                     ( Ok_ model, Cmd.none )
@@ -372,9 +615,10 @@ updateOk msg model =
                             { model
                                 | waistSizeRecords =
                                     WaistSizeRecords.insert
-                                        (Timestamp.fromPosix posix)
+                                        model.now
                                         waistSize
                                         model.waistSizeRecords
+                                , waistSizeNotification = On
                             }
                     in
                     ( Ok_ newModel, dumpCache newModel )
@@ -439,6 +683,16 @@ updateOk msg model =
                     , Cmd.none
                     )
 
+        BadTimestamp ->
+            (Fatal "bad timestamp", Cmd.none)
+
+        Now now ->
+            ( Ok_ { model | now = now }, Cmd.none )
+
+        Zone zone ->
+            ( Ok_ { model | zone = zone }, Cmd.none )
+
+
 
 type alias RawFood =
     { description : String
@@ -469,82 +723,576 @@ makeFood { description, energy } =
 type alias RawMeal =
     { mealWeight : String
     , food : Food
-    , time : Time.Posix
+    , time : Timestamp
     }
 
 
 makeMeal : RawMeal -> Result String Meal
 makeMeal { mealWeight, food, time } =
-    case FoodMass.fromGramString mealWeight of
-        Err err ->
-            Err err
-
-        Ok foodMass ->
-            Meal.make
-                (Timestamp.fromPosix time)
-                (Food.energyRate food)
-                foodMass
-                |> Ok
+    Result.map 
+        (Meal.make time (Food.energyRate food))
+        (FoodMass.fromGramString mealWeight)
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Time.every halfHour posixMsg
+
+
+posixMsg : Time.Posix -> Msg
+posixMsg =
+        Timestamp.fromPosix
+            >> Result.map Now
+            >> Result.withDefault BadTimestamp
+
+
+halfHour : Float
+halfHour =
+    30 * 60 * 1000 -- milliseconds
 
 
 init : Decode.Value -> ( Model, Cmd Msg )
 init flags =
-    case Decode.decodeValue (Decode.nullable decodeCache) flags of
+    case Decode.decodeValue decodeCache flags of
         Err err ->
             ( Fatal (Decode.errorToString err)
             , Cmd.none
             )
 
-        Ok (Just { customFoods, bodyWeightRecords, waistSizeRecords, meals }) ->
-            ( { foodSearchBox = ""
-              , customFoods = customFoods
-              , foodSearchResultsPage = PageNum.first
-              , selectedFood = Nothing
-              , mealWeightBox = ""
-              , newFoodDescriptionBox = ""
-              , newFoodEnergyBox = ""
-              , bodyWeightBox = ""
-              , waistSizeBox = ""
-              , bodyWeightRecords = bodyWeightRecords
-              , bodyWeightsPage = PageNum.first
-              , waistSizeRecords = waistSizeRecords
-              , waistSizesPage = PageNum.first
-              , meals = meals
-              , mealsPage = PageNum.first
-              , fileUploadStatus = NoProblems
-              }
-                |> Ok_
-            , Cmd.none
-            )
-
-        Ok Nothing ->
-            ( { foodSearchBox = ""
-              , customFoods = Foods.empty
-              , foodSearchResultsPage = PageNum.first
-              , selectedFood = Nothing
-              , bodyWeightBox = ""
-              , waistSizeBox = ""
-              , bodyWeightRecords = BodyWeightRecords.empty
-              , bodyWeightsPage = PageNum.first
-              , waistSizeRecords = WaistSizeRecords.empty
-              , waistSizesPage = PageNum.first
-              , meals = Meals.empty
-              , mealsPage = PageNum.first
-              , mealWeightBox = ""
-              , newFoodDescriptionBox = ""
-              , newFoodEnergyBox = ""
-              , fileUploadStatus = NoProblems
-              }
-                |> Ok_
-            , Cmd.none
-            )
+        Ok cache ->
+            ( LoadingZoneAndTime cache
+            , Cmd.batch
+                [ Task.perform posixMsg Time.now
+                , Task.perform Zone Time.here
+                ]
+             )
 
 
 view : Model -> Html Msg
 view model =
-    Html.text "hi"
+    Element.layout
+        [Font.family [Font.serif]
+        , Element.width Element.fill
+        , Element.padding 8
+        , Background.color white
+        ]
+        (viewElement model)
+
+
+notificationView : String -> Element Msg
+notificationView msg =
+    if msg == "" then
+        Element.none
+
+    else
+        Element.text msg
+        |> Element.el
+            [Background.color yellow
+            , Element.alignBottom
+            , Element.centerX
+            ]
+
+
+viewElement : Model -> Element Msg
+viewElement model =
+    case model of
+        Fatal err ->
+            viewFatalError err
+
+        LoadingZoneAndTime _ ->
+            Element.none
+
+        LoadingZone _ _ ->
+            Element.none
+
+        LoadingTime _ _ ->
+            Element.none
+
+        Ok_ okModel ->
+            viewOk okModel
+
+
+viewOk : OkModel -> Element Msg
+viewOk model =
+    [ header "Amount eaten today"
+    , Meals.energyToday model.meals model.now model.zone
+        |> energyTodayView
+    , header "Record a meal"
+    , foodSearchView
+        model.customFoods
+        model.foodSearchBox
+        model.foodSearchResultsPage
+    , makeNewMealView
+        model.selectedFood
+        model.mealWeightBox 
+        model.mealNotification
+    , header "Record a new food"
+    , makeNewFoodView
+        model.newFoodDescriptionBox
+        model.newFoodEnergyBox
+        model.foodNotification
+    , header "Record a body weight"
+    , bodyWeightView model.bodyWeightBox model.bodyWeightNotification
+    , header "Record a waist size"
+    , waistSizeView model.waistSizeBox model.waistSizeNotification
+    ]
+        |>Element.column
+            [ Element.spacing 15
+            , Element.width Element.fill
+            ]
+
+
+bodyWeightView : String -> NotificationStatus -> Element Msg
+bodyWeightView bodyWeightBox notificationStatus =
+        [   { onChange = BodyWeightBox
+            , label =
+                
+                Element.text "New body weight in kg:"
+                |> Input.labelLeft [] 
+            , placeholder = Nothing
+            , text = bodyWeightBox
+            }
+            |> Input.text [ Element.width (Element.px 100) ]
+            |> List.singleton
+        , boxErr bodyWeightBox BodyWeight.fromKgString
+            |> List.singleton
+        ,   { onPress = Just SubmitBodyWeight
+            , label = Element.text "Record new body weight"
+            }
+            |> Input.button submitButtonStyle
+            |> List.singleton
+        , case notificationStatus of
+            On ->
+                Element.el
+                    [Background.color yellow]
+                    (Element.text "body weight recorded")
+                    |> List.singleton
+
+            Off -> []
+        ]
+        |> List.concat
+        |> Element.wrappedRow [ Element.spacing 8 ]
+
+
+waistSizeView : String -> NotificationStatus -> Element Msg
+waistSizeView waistSizeBox notificationStatus =
+    [ { onChange = WaistSizeBox
+      , label =
+        Element.text "New waist size in cm:"
+        |> Input.labelLeft [] 
+      , placeholder = Nothing
+      , text = waistSizeBox
+      }
+      |> Input.text [ Element.width (Element.px 100) ]
+      |> List.singleton
+    , boxErr waistSizeBox WaistSize.fromCmString
+      |> List.singleton
+    , {onPress = Just SubmitWaistSize
+      , label = Element.text "Record a new waist size"
+      }
+      |> Input.button submitButtonStyle
+      |> List.singleton
+    , case notificationStatus of
+        On ->
+            Element.text "waist size recorded"
+            |> Element.el [ Background.color yellow ]
+            |> List.singleton
+        Off -> []
+    ]
+    |> List.concat
+    |> Element.wrappedRow [ Element.spacing 8 ]
+
+
+makeNewFoodView : String -> String -> NotificationStatus -> Element Msg
+makeNewFoodView description energy notificationStatus =
+        [   { onChange = NewFoodDescriptionBox
+            , label =
+                Input.labelLeft
+                    []
+                    (Element.text "New food description:")
+            , placeholder = Nothing
+            , text = description
+            }
+            |> Input.text [ Element.width (Element.px 400) ]
+            |> List.singleton
+        , boxErr description FoodDescription.fromString
+            |> List.singleton
+        ,   { onChange = NewFoodEnergyBox
+            , label =
+                Input.labelLeft [] (Element.text "New food energy:")
+            , placeholder = Nothing
+            , text = energy
+            }
+            |> Input.text [ Element.width (Element.px 100) ]
+            |> List.singleton
+        , boxErr energy EnergyRate.fromKcalPer100gString
+            |> List.singleton
+        ,   { onPress = Just SubmitNewFood
+            , label = Element.text "Record new food"
+            }
+            |> Input.button submitButtonStyle
+            |> List.singleton
+        , case notificationStatus of
+            On ->
+                Element.el
+                    [Background.color yellow]
+                    (Element.text "new food recorded")
+                    |> List.singleton
+
+            Off -> []
+        ]
+            |> List.concat
+            |> Element.wrappedRow [Element.spacing 8 ]
+
+
+type NotificationStatus
+    = On
+    | Off
+
+
+makeNewMealView : Maybe Food -> String -> NotificationStatus -> Element Msg
+makeNewMealView selectedFood mealWeightBox notificationStatus =
+    case selectedFood of
+        Nothing ->
+            Element.none
+
+        Just selectedFood_ ->
+            Element.column
+                [Element.spacing 8 ]
+                [ selectedFoodView selectedFood_
+                ,   [ mealWeightBoxView mealWeightBox |> List.singleton
+                    , mealWeightBoxError mealWeightBox |> List.singleton
+                    , submitMealButton |> List.singleton
+                    , case notificationStatus of
+                        On ->
+                            Element.el
+                                [Background.color yellow]
+                                (Element.text "meal recorded")
+                                |> List.singleton
+
+                        Off -> []
+                    ]
+                    |> List.concat
+                    |> Element.wrappedRow [Element.spacing 8]
+                ]
+
+
+mealWeightBoxError : String -> Element Msg
+mealWeightBoxError contents =
+    boxErr contents FoodMass.fromGramString
+
+
+boxErr : String -> (String -> Result String a) -> Element Msg
+boxErr contents f =
+    if contents == "" then
+        Element.none
+    else case f contents of
+        Err err ->
+            Element.el [Background.color yellow]
+            (Element.text err)
+
+        Ok _ ->
+            Element.none
+
+
+mealWeightBoxView : String -> Element Msg
+mealWeightBoxView contents =
+    Input.text
+        [ Element.width (Element.px 100) ]
+        { onChange = MealWeightBox
+        , text = contents
+        , placeholder = Nothing
+        , label = Input.labelLeft [] (Element.text "Meal weight in grams: ")
+        }
+
+
+submitButtonStyle =
+        [ Element.padding 15
+        , Element.mouseOver [Background.color whiteHover]
+        , Border.solid
+        , Border.width 1
+        , Border.color darkBrown
+        , Border.rounded 3
+        ]
+
+
+submitMealButton : Element Msg
+submitMealButton =
+    Input.button
+        submitButtonStyle
+        { onPress = Just SubmitMeal
+        , label = Element.text "Record meal"
+        }
+
+
+selectedFoodView : Food -> Element Msg
+selectedFoodView food =
+            Element.paragraph
+                [Font.size 30]
+                [ "Selected food: "
+                    |> Element.text
+                    |> Element.el [Font.size 20, Font.regular]
+                , food
+                    |> Food.description
+                    |> FoodDescription.toString
+                    |> Element.text
+                , food
+                    |> Food.energyRate
+                    |> EnergyRate.energy
+                    |> Energy.toInt
+                    |> String.fromInt
+                    |> (\s -> " (" ++ s ++ " kCal / 100g)")
+                    |> Element.text
+                ]
+
+
+foodResultsPerPage : Int
+foodResultsPerPage =
+    20
+
+
+totalPages : Int -> Int
+totalPages numResults =
+    (toFloat numResults / toFloat foodResultsPerPage) |> ceiling
+
+
+foodSearch customFoods query =
+    if String.isEmpty query then
+        []
+    else
+        let
+            customMatches : List Food
+            customMatches =
+                Foods.search query customFoods
+
+            builtInMatches : List Food
+            builtInMatches =
+                Foods.search query Foods.builtIns
+
+        in
+            customMatches ++ builtInMatches
+
+
+foodSearchView : Foods -> String -> PageNum -> Element Msg
+foodSearchView customFoods searchBox pageNum =
+    let
+        matches : List Food
+        matches =
+            (foodSearch customFoods searchBox)
+            |> List.take (PageNum.pageNum pageNum * foodResultsPerPage)
+    in
+    Element.column
+        [Font.color darkBrown
+        , Element.spacing 8
+        , Element.width Element.fill
+        ]
+        (foodSearchBoxView searchBox
+        :: (foodSearchResultsView matches
+            ++ (foodSearchPaginationView pageNum)))
+
+
+header : String -> Element Msg
+header text =
+    Element.el
+        [ Font.size 25
+        , Region.heading 1
+        , Font.color blueMountain
+        ]
+        (Element.text text)
+
+
+
+foodSearchPaginationView : PageNum -> List (Element Msg)
+foodSearchPaginationView pageNum =
+    if PageNum.totalPages pageNum <= 1 then
+        []
+
+    else if PageNum.isFirstPage pageNum then
+        moreFoodSearchResultsButton |> List.singleton
+
+    else if PageNum.isLastPage pageNum then
+        lessFoodSearchResultsButton |> List.singleton
+
+    else
+        Element.row
+            [Element.spacing 8
+            ]
+            [ moreFoodSearchResultsButton
+            , lessFoodSearchResultsButton
+            ]
+            |> List.singleton
+
+
+moreFoodSearchResultsButton : Element Msg
+moreFoodSearchResultsButton =
+    Input.button
+        lessMoreStyle
+        { onPress = Just OneMoreFoodSearchPage
+        , label = Element.text "more results"
+        }
+
+
+lessMoreStyle : List (Element.Attribute Msg)
+lessMoreStyle =
+        [Element.padding 15
+        , Element.mouseOver [Background.color whiteHover]
+        , Border.solid
+        , Font.color mustard
+        , Border.width 1
+        , Border.color mustard
+        , Border.rounded 3
+        ]
+
+
+lessFoodSearchResultsButton : Element Msg
+lessFoodSearchResultsButton =
+    Input.button
+        lessMoreStyle
+        { onPress = Just OneLessFoodSearchPage
+        , label = Element.text "less results"
+        }
+
+
+foodSearchResultsView : List Food -> List (Element Msg)
+foodSearchResultsView foods =
+    if List.isEmpty foods then
+        []
+
+    else
+        foods
+        |> List.map foodSearchResultView
+            |> Element.wrappedRow
+                [ Element.spacing 8 ]
+                |> List.singleton
+
+
+foodSearchResultView : Food -> Element Msg
+foodSearchResultView food =
+    Input.button
+        [ Background.color bluePaleSky
+        , Element.mouseOver [Background.color bluePaleSkyHover]
+        , Element.padding 20
+        , Border.rounded 3
+        ]
+        { onPress = Just (FoodSearchResultClick food)
+        , label =
+            Element.row
+                [Element.spacing 5]
+                [ food
+                    |> Food.description
+                    |> FoodDescription.toString
+                    |> Element.text
+                , food
+                    |> Food.energyRate
+                    |> EnergyRate.energy
+                    |> Energy.toInt
+                    |> String.fromInt
+                    |> (\e -> "(" ++ e ++ " kCal / 100g)")
+                    |> Element.text
+                ]
+        }
+
+
+foodSearchBoxView : String -> Element Msg
+foodSearchBoxView contents =
+    Input.text
+        [Element.width Element.fill
+        , Element.width (Element.px 400)
+        ]
+        { onChange = FoodSearchBox
+        , text = contents
+        , placeholder = Nothing
+        , label = Input.labelLeft [] (Element.text "Food search:")
+        }
+
+
+energyTodayView : Energy -> Element Msg
+energyTodayView energy =
+    Element.paragraph
+        [ Font.color darkBrown ]
+        [ energy
+            |> Energy.toKcal
+            |> String.fromInt
+            |> Element.text
+            |> Element.el [ Font.size 50 ]
+        , Element.text " kCal eaten today"
+        ]
+
+
+viewFatalError : String -> Element Msg
+viewFatalError err =
+    Element.column
+        [Element.spacing 20]
+        [ Element.paragraph
+            [ Font.size 40
+            , Font.color darkBrown
+            ]
+            [Element.text "Sorry, something went wrong"]
+        , Element.paragraph
+            [Font.size 20
+            , Font.color darkBrown
+            ]
+            [Element.text "It's not your fault. It's because of a mistake in the code."
+            ]
+        , Element.paragraph
+            [Font.size 20
+            , Font.family [Font.monospace]
+            , Font.color mustard
+            ]
+            [Element.text err ]
+        ]
+
+
+darkBrown : Element.Color
+darkBrown =
+    Element.rgb255 34 19 16
+
+
+mustard : Element.Color
+mustard =
+    Element.rgb255 185 119 32
+
+
+orange : Element.Color
+orange =
+    Element.rgb255 238 155 17
+
+
+beige : Element.Color
+beige =
+    Element.rgb255 242 200 158
+
+
+yellow : Element.Color
+yellow =
+    Element.rgb255 255 176 63
+
+
+blueMountain : Element.Color
+blueMountain =
+    Element.rgb255 137 180 214
+
+
+blueCloud : Element.Color
+blueCloud =
+    Element.rgb255 180 204 232
+
+
+bluePaleSky : Element.Color
+bluePaleSky =
+    Element.rgb255 214 236 249
+
+
+bluePaleSkyHover : Element.Color
+bluePaleSkyHover =
+    Element.rgb255 204 226 239
+
+
+white : Element.Color
+white =
+    Element.rgb255 244 243 238
+
+
+whiteHover : Element.Color
+whiteHover =
+    Element.rgb255 234 233 228

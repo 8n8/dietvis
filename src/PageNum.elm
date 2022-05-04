@@ -1,13 +1,55 @@
-module PageNum exposing (PageNum, first, minus1, plus1)
+module PageNum exposing
+    ( PageNum
+    , empty
+    , first
+    , isFirstPage
+    , isLastPage
+    , minus1
+    , pageNum
+    , plus1
+    , totalPages
+    )
 
 
 type PageNum
-    = PageNum Int
+    = PageNum
+        { pageNum : Int
+        , totalPages : Int
+        }
 
 
-first : PageNum
-first =
-    PageNum 0
+empty : PageNum
+empty =
+    PageNum { pageNum = 0, totalPages = 0 }
+
+
+totalPages : PageNum -> Int
+totalPages (PageNum p) =
+    p.totalPages
+
+
+pageNum : PageNum -> Int
+pageNum (PageNum p) =
+    p.pageNum + 1
+
+
+first : Int -> Result String PageNum
+first n =
+    if n < 0 then
+        Err "can't have negative page numbers"
+
+    else
+        Ok (PageNum { pageNum = 0, totalPages = n })
+
+
+isFirstPage : PageNum -> Bool
+isFirstPage (PageNum p) =
+    p.pageNum == 0
+
+
+isLastPage : PageNum -> Bool
+isLastPage (PageNum p) =
+    p.pageNum + 1 == p.totalPages
 
 
 {-| There is nothing special about this number. All it needs to be is
@@ -20,17 +62,17 @@ maxPageNum =
 
 plus1 : PageNum -> Result String PageNum
 plus1 (PageNum p) =
-    if p == maxPageNum then
+    if p.pageNum + 1 == p.totalPages then
         Err "maximum page number reached"
 
     else
-        Ok (PageNum (p + 1))
+        Ok (PageNum { p | pageNum = p.pageNum + 1 })
 
 
 minus1 : PageNum -> Result String PageNum
 minus1 (PageNum p) =
-    if p == 0 then
+    if p.pageNum == 0 then
         Err "minimum page number reached"
 
     else
-        Ok (PageNum (p - 1))
+        Ok (PageNum { p | pageNum = p.pageNum - 1 })
