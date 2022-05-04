@@ -22,7 +22,7 @@ encode (WaistSize w) =
 
 minWaistSize : Int
 minWaistSize =
-    200
+    1
 
 
 maxWaistSize : Int
