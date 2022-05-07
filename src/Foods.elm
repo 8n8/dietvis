@@ -26,7 +26,8 @@ search searchString (Foods foods) =
         |> List.sortBy
             (Food.description
                 >> FoodDescription.toString
-                >> String.toLower)
+                >> String.toLower
+            )
 
 
 insert : Food -> Foods -> Foods
@@ -34,9 +35,9 @@ insert food (Foods foods) =
     let
         descriptions =
             foods
-            |> List.map Food.description
-            |> List.map FoodDescription.toString
-            |> Set.fromList
+                |> List.map Food.description
+                |> List.map FoodDescription.toString
+                |> Set.fromList
 
         description =
             food |> Food.description |> FoodDescription.toString
