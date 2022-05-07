@@ -891,7 +891,6 @@ bodyWeightView bodyWeightBox notificationStatus =
             |> Input.text [ Element.width (Element.px 100) ]
             |> List.singleton
         , boxErr bodyWeightBox BodyWeight.fromKgString
-            |> List.singleton
         , saveButton SubmitBodyWeight
         , saved notificationStatus
         ]
@@ -920,7 +919,6 @@ waistSizeView waistSizeBox notificationStatus =
       |> List.singleton
     , saveButton SubmitWaistSize
     , boxErr waistSizeBox WaistSize.fromCmString
-      |> List.singleton
     , saved notificationStatus
     ]
     |> List.concat
@@ -936,25 +934,23 @@ makeNewFoodView description energy notificationStatus =
                     (Element.text "Food description:")
             , placeholder = Nothing
             , text = description
-            } |> Input.text [ Element.width (Element.px 400) ]
+            } |> Input.text [ Element.width (Element.maximum 400 Element.fill), Element.alignLeft ]
             |> List.singleton
         , boxErr description FoodDescription.fromString
-            |> List.singleton
         ,   { onChange = NewFoodEnergyBox
             , label =
-                Input.labelLeft [] (Element.text "Food energy:")
+                Input.labelLeft [] (Element.text "Food energy in kCal per 100g:")
             , placeholder = Nothing
             , text = energy
             }
             |> Input.text [ Element.width (Element.px 100) ]
             |> List.singleton
         , boxErr energy EnergyRate.fromKcalPer100gString
-            |> List.singleton
         , saveButton SubmitNewFood
         , saved notificationStatus
         ]
             |> List.concat
-            |> Element.wrappedRow [Element.spacing 8 ]
+            |> Element.column [Element.spacing 8 ]
 
 
 type NotificationStatus
@@ -973,31 +969,35 @@ makeNewMealView selectedFood mealWeightBox notificationStatus =
                 [Element.spacing 8 ]
                 [ selectedFoodView selectedFood_
                 ,   [ mealWeightBoxView mealWeightBox |> List.singleton
-                    , mealWeightBoxError mealWeightBox |> List.singleton
-                    , saveButton SubmitMeal
-                    , saved notificationStatus
+                    , mealWeightBoxError mealWeightBox
                     ]
                     |> List.concat
                     |> Element.wrappedRow [Element.spacing 8]
+                , [ saveButton SubmitMeal
+                  , saved notificationStatus
+                  ]
+                  |> List.concat
+                  |> Element.row [Element.spacing 8]
                 ]
 
 
-mealWeightBoxError : String -> Element Msg
+mealWeightBoxError : String -> List (Element Msg)
 mealWeightBoxError contents =
     boxErr contents FoodMass.fromGramString
 
 
-boxErr : String -> (String -> Result String a) -> Element Msg
+boxErr : String -> (String -> Result String a) -> List (Element Msg)
 boxErr contents f =
     if contents == "" then
-        Element.none
+        []
     else case f contents of
         Err err ->
-            Element.el [Background.color yellow]
             (Element.text err)
+            |> Element.el [Background.color yellow]
+            |> List.singleton
 
         Ok _ ->
-            Element.none
+            []
 
 
 mealWeightBoxView : String -> Element Msg
@@ -1178,32 +1178,31 @@ foodSearchResultView food =
         , Element.mouseOver [Background.color bluePaleSkyHover]
         , Element.padding 20
         , Border.rounded 3
+        , Element.height Element.fill
         ]
         { onPress = Just (FoodSearchResultClick food)
         , label =
-            Element.row
-                [Element.spacing 5]
                 [ food
                     |> Food.description
                     |> FoodDescription.toString
-                    |> Element.text
                 , food
                     |> Food.energyRate
                     |> EnergyRate.energy
                     |> Energy.toInt
                     |> String.fromInt
-                    |> (\e -> "(" ++ e ++ " kCal / 100g)")
-                    |> Element.text
+                    |> (\e -> " (" ++ e ++ " kCal / 100g)")
                 ]
+                |> String.concat
+                |> Element.text
+                |> List.singleton
+                |> Element.paragraph [ Element.width (Element.px 300), Element.height Element.fill ]
         }
 
 
 foodSearchBoxView : String -> Element Msg
 foodSearchBoxView contents =
     Input.text
-        [Element.width Element.fill
-        , Element.width (Element.px 400)
-        ]
+        [Element.width (Element.maximum 400 Element.fill) ]
         { onChange = FoodSearchBox
         , text = contents
         , placeholder = Nothing
