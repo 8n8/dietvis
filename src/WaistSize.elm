@@ -1,4 +1,4 @@
-module WaistSize exposing (WaistSize, decode, encode, fromCmString)
+module WaistSize exposing (WaistSize, decode, encode, fromCmString, toCm)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
@@ -8,6 +8,11 @@ import Json.Encode as Encode
 -}
 type WaistSize
     = WaistSize Int
+
+
+toCm : WaistSize -> Float
+toCm (WaistSize waistSize) =
+    toFloat waistSize / 10
 
 
 decode : Decoder WaistSize

@@ -4,6 +4,9 @@ module Timestamp exposing
     , encode
     , fromPosix
     , isToday
+    , daysAgo
+    , nDaysUpTo
+    , ddMmYy
     )
 
 import Json.Decode as Decode exposing (Decoder)
@@ -15,15 +18,52 @@ type Timestamp
     = Timestamp Int
 
 
+daysAgo : { now : Timestamp, t : Timestamp, zone : Time.Zone } -> Int
+daysAgo t =
+    daysAgoHelp t 0
+
+daysAgoHelp : { now : Timestamp, t : Timestamp, zone : Time.Zone } -> Int -> Int
+daysAgoHelp t accum =
+    if isToday t then
+        accum
+
+    else
+        daysAgoHelp {t | now = minusDay t.now} (accum + 1)
+
+
+nDaysUpTo : Int -> Timestamp -> List Timestamp
+nDaysUpTo n now =
+    List.reverse (nDaysUpToHelp n now [])
+
+
+nDaysUpToHelp : Int -> Timestamp -> List Timestamp -> List Timestamp
+nDaysUpToHelp n now accum =
+    if n <= 0 then
+        accum
+
+    else
+        nDaysUpToHelp (n-1) (minusDay now) (now :: accum)
+        
+
+
+minusDay : Timestamp -> Timestamp
+minusDay (Timestamp t) =
+    (Timestamp (t - 24))
+
+
 isToday : { now : Timestamp, t : Timestamp, zone : Time.Zone } -> Bool
 isToday { now, t, zone } =
     let
         midnight =
             latestMidnight now zone
+        _ = Debug.log "midnight" midnight
+        _ = Debug.log "now" now
+        _ = Debug.log "t" t
     in
     midnight
         |> Result.map (\m -> greaterThanOrEqual t m)
         |> Result.withDefault False
+        |> Debug.log "isToday"
 
 
 greaterThanOrEqual : Timestamp -> Timestamp -> Bool
@@ -56,6 +96,58 @@ latestMidnight now zone =
 toPosix : Timestamp -> Time.Posix
 toPosix (Timestamp t) =
     Time.millisToPosix (t * 3600 * 1000 + epoch)
+
+
+ddMmYy : Time.Zone -> Timestamp -> String
+ddMmYy zone t =
+    let posix = toPosix t in
+    [ String.fromInt (Time.toDay zone posix)
+    , " "
+    , prettyMonth (Time.toMonth zone posix)
+    , " "
+    , String.fromInt (Time.toYear zone posix)
+    ]
+    |> String.concat
+
+
+prettyMonth : Time.Month -> String
+prettyMonth month =
+    case month of
+        Time.Jan ->
+            "Jan"
+
+        Time.Feb ->
+            "Feb"
+
+        Time.Mar ->
+            "Mar"
+
+        Time.Apr ->
+            "Apr"
+
+        Time.May ->
+            "May"
+
+        Time.Jun ->
+            "Jun"
+
+        Time.Jul ->
+            "Jul"
+
+        Time.Aug ->
+            "Aug"
+
+        Time.Sep ->
+            "Sep"
+
+        Time.Oct ->
+            "Oct"
+
+        Time.Nov ->
+            "Nov"
+
+        Time.Dec ->
+            "Dec"
 
 
 {-| Posix time in milliseconds at the time of writing. This is the

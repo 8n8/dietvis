@@ -1,4 +1,6 @@
-module BodyWeight exposing (BodyWeight, decode, encode, fromKgString)
+module BodyWeight exposing
+    (BodyWeight
+    , decode, encode, fromKgString, toKg)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
@@ -8,6 +10,11 @@ import Json.Encode as Encode
 -}
 type BodyWeight
     = BodyWeight Int
+
+
+toKg : BodyWeight -> Float
+toKg (BodyWeight bodyWeight) =
+    toFloat bodyWeight / 10
 
 
 decode : Decoder BodyWeight

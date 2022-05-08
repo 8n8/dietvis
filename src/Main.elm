@@ -989,6 +989,9 @@ viewElement model =
 
 viewOk : OkModel -> Element Msg
 viewOk model =
+    let
+        _ = Debug.log "meals" model.meals
+    in
     [ header "Amount eaten today"
     , Meals.energyToday model.meals model.now model.zone
         |> energyTodayView
@@ -1010,11 +1013,125 @@ viewOk model =
     , bodyWeightView model.bodyWeightBox model.bodyWeightNotification
     , header "Record a waist size"
     , waistSizeView model.waistSizeBox model.waistSizeNotification
+    , header "Body weight chart"
+    , dailyChartView
+        { zone = model.zone
+        , now = model.now
+        , pageNum = model.bodyWeightsPage
+        , data =
+            BodyWeightRecords.dailyAverage
+                model.zone
+                model.bodyWeightRecords
+                model.now
+        , toString =
+            (*) 10
+                >> round
+                >> toFloat
+                >> (\f -> f / 10)
+                >> String.fromFloat
+        }
+    , header "Waist size chart"
+    , dailyChartView
+        { zone = model.zone
+        , now = model.now
+        , pageNum = model.waistSizesPage
+        , data =
+            WaistSizeRecords.dailyAverage
+                model.zone
+                model.waistSizeRecords
+                model.now
+        , toString =
+            (*) 10
+                >> round
+                >> toFloat
+                >> (\f -> f / 10)
+                >> String.fromFloat
+        }
+    , header "Daily calories chart"
+    , dailyChartView
+        { zone = model.zone
+        , now = model.now
+        , pageNum = model.mealsPage
+        , data = Meals.dailyCalories model.zone model.meals model.now
+        , toString = round >> String.fromInt
+        }
     ]
         |> Element.column
             [ Element.spacing 15
             , Element.width Element.fill
             ]
+
+
+dataPerPage : Int
+dataPerPage =
+    10
+
+
+dailyChartView :
+    { zone : Time.Zone
+    , now : Timestamp
+    , pageNum : PageNum
+    , data : List Float
+    , toString : Float -> String
+    }
+    -> Element Msg
+dailyChartView {zone, now, pageNum, data, toString} =
+    let
+        numRows = dataPerPage * (PageNum.pageNum pageNum)
+        dates = Timestamp.nDaysUpTo (List.length data) now 
+        maxData = List.maximum data |> Maybe.withDefault 0
+    in
+        List.map2
+            (\point date ->
+                dataPointView
+                    { zone = zone
+                    , max_ = maxData
+                    , point = point
+                    , toString = toString
+                    , date = date
+                    })
+            (List.take numRows data)
+            dates
+        |> Element.column []
+
+
+barScale : Float
+barScale =
+    200
+
+
+dataPointView :
+    { zone : Time.Zone
+    , max_ : Float
+    , point : Float
+    , toString : Float -> String
+    , date : Timestamp
+    }
+    -> Element Msg
+dataPointView {zone, max_, point, toString, date} =
+    let
+        barWidth = point * barScale / max_
+        gap = barScale - barWidth
+    in
+    [ Element.el
+        [Element.width (Element.px (round barWidth))
+        , Element.height (Element.px 12)
+        , Background.color blueMountain
+        ]
+        Element.none
+    , Element.el
+        [Element.width (Element.px (round gap))
+        , Element.height (Element.px 12)
+        ]
+        Element.none
+    , Element.el
+        [Element.width (Element.px 60)]
+        (Element.text (toString point))
+    , Element.el
+        []
+        (Element.text (Timestamp.ddMmYy zone date))
+    ]
+    |> Element.row [Element.spacing 8]
 
 
 saved notificationStatus =
