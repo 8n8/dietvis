@@ -561,7 +561,7 @@ encodeCache { customFoods, bodyWeightRecords, waistSizeRecords, meals } =
     , ( "meals", Meals.encode meals )
     ]
         |> Encode.object
-        |> Encode.encode 0
+        |> Encode.encode 4
 
 
 updateOk : Msg -> OkModel -> ( Model, Cmd Msg )
@@ -1018,6 +1018,8 @@ viewOk model =
         { zone = model.zone
         , now = model.now
         , pageNum = model.bodyWeightsPage
+        , more = OneMoreBodyWeightPage
+        , less = OneLessBodyWeightPage
         , data =
             BodyWeightRecords.dailyAverage
                 model.zone
@@ -1035,6 +1037,8 @@ viewOk model =
         { zone = model.zone
         , now = model.now
         , pageNum = model.waistSizesPage
+        , more = OneMoreWaistSizePage
+        , less = OneLessWaistSizePage
         , data =
             WaistSizeRecords.dailyAverage
                 model.zone
@@ -1052,9 +1056,23 @@ viewOk model =
         { zone = model.zone
         , now = model.now
         , pageNum = model.mealsPage
+        , more = OneMoreMealsPage
+        , less = OneLessMealsPage
         , data = Meals.dailyCalories model.zone model.meals model.now
         , toString = round >> String.fromInt
         }
+    , header "Download your data"
+    , Input.button
+          lessMoreStyle
+          { onPress = Just DownloadData
+          , label = Element.text "Download data"
+          }
+    , header "Upload your data"
+      , Input.button
+        lessMoreStyle
+            {onPress = Just UploadData
+            , label = Element.text "Upload data"
+            }
     ]
         |> Element.column
             [ Element.spacing 15
@@ -1073,15 +1091,17 @@ dailyChartView :
     , pageNum : PageNum
     , data : List Float
     , toString : Float -> String
+    , more : Msg
+    , less : Msg
     }
     -> Element Msg
-dailyChartView {zone, now, pageNum, data, toString} =
+dailyChartView {zone, now, pageNum, data, toString, more, less} =
     let
         numRows = dataPerPage * (PageNum.pageNum pageNum)
         dates = Timestamp.nDaysUpTo (List.length data) now 
         maxData = List.maximum data |> Maybe.withDefault 0
     in
-        List.map2
+        [ List.map2
             (\point date ->
                 dataPointView
                     { zone = zone
@@ -1092,6 +1112,10 @@ dailyChartView {zone, now, pageNum, data, toString} =
                     })
             (List.take numRows data)
             dates
+        , paginationView
+            { pageNum = pageNum, more = more, less = less }
+        ]
+        |> List.concat
         |> Element.column []
 
 
@@ -1363,7 +1387,11 @@ foodSearchView customFoods searchBox pageNum =
         ]
         (foodSearchBoxView searchBox
             :: (foodSearchResultsView matches
-                    ++ foodSearchPaginationView pageNum
+                    ++ paginationView
+                        { pageNum = pageNum
+                        , more = OneMoreFoodSearchPage
+                        , less = OneLessFoodSearchPage
+                        }
                )
         )
 
@@ -1378,32 +1406,37 @@ header text =
         (Element.text text)
 
 
-foodSearchPaginationView : PageNum -> List (Element Msg)
-foodSearchPaginationView pageNum =
+paginationView :
+    { pageNum : PageNum
+    , more : Msg
+    , less : Msg
+    }
+    -> List (Element Msg)
+paginationView {pageNum, more, less} =
     if PageNum.totalPages pageNum <= 1 then
         []
 
     else if PageNum.isFirstPage pageNum then
-        moreFoodSearchResultsButton |> List.singleton
+        moreResultsButton more |> List.singleton
 
     else if PageNum.isLastPage pageNum then
-        lessFoodSearchResultsButton |> List.singleton
+        lessResultsButton less |> List.singleton
 
     else
         Element.row
             [ Element.spacing 8
             ]
-            [ moreFoodSearchResultsButton
-            , lessFoodSearchResultsButton
+            [ moreResultsButton more
+            , lessResultsButton less
             ]
             |> List.singleton
 
 
-moreFoodSearchResultsButton : Element Msg
-moreFoodSearchResultsButton =
+moreResultsButton : Msg -> Element Msg
+moreResultsButton msg =
     Input.button
         lessMoreStyle
-        { onPress = Just OneMoreFoodSearchPage
+        { onPress = Just msg
         , label = Element.text "more results"
         }
 
@@ -1420,11 +1453,11 @@ lessMoreStyle =
     ]
 
 
-lessFoodSearchResultsButton : Element Msg
-lessFoodSearchResultsButton =
+lessResultsButton : Msg -> Element Msg
+lessResultsButton msg =
     Input.button
         lessMoreStyle
-        { onPress = Just OneLessFoodSearchPage
+        { onPress = Just msg
         , label = Element.text "less results"
         }
 
