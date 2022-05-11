@@ -1,12 +1,12 @@
 module Timestamp exposing
     ( Timestamp
+    , daysAgo
+    , ddMmYy
     , decode
     , encode
     , fromPosix
     , isToday
-    , daysAgo
     , nDaysUpTo
-    , ddMmYy
     )
 
 import Json.Decode as Decode exposing (Decoder)
@@ -22,13 +22,14 @@ daysAgo : { now : Timestamp, t : Timestamp, zone : Time.Zone } -> Int
 daysAgo t =
     daysAgoHelp t 0
 
+
 daysAgoHelp : { now : Timestamp, t : Timestamp, zone : Time.Zone } -> Int -> Int
 daysAgoHelp t accum =
     if isToday t then
         accum
 
     else
-        daysAgoHelp {t | now = minusDay t.now} (accum + 1)
+        daysAgoHelp { t | now = minusDay t.now } (accum + 1)
 
 
 nDaysUpTo : Int -> Timestamp -> List Timestamp
@@ -42,13 +43,12 @@ nDaysUpToHelp n now accum =
         accum
 
     else
-        nDaysUpToHelp (n-1) (minusDay now) (now :: accum)
-        
+        nDaysUpToHelp (n - 1) (minusDay now) (now :: accum)
 
 
 minusDay : Timestamp -> Timestamp
 minusDay (Timestamp t) =
-    (Timestamp (t - 24))
+    Timestamp (t - 24)
 
 
 isToday : { now : Timestamp, t : Timestamp, zone : Time.Zone } -> Bool
@@ -56,9 +56,15 @@ isToday { now, t, zone } =
     let
         midnight =
             latestMidnight now zone
-        _ = Debug.log "midnight" midnight
-        _ = Debug.log "now" now
-        _ = Debug.log "t" t
+
+        _ =
+            Debug.log "midnight" midnight
+
+        _ =
+            Debug.log "now" now
+
+        _ =
+            Debug.log "t" t
     in
     midnight
         |> Result.map (\m -> greaterThanOrEqual t m)
@@ -100,14 +106,17 @@ toPosix (Timestamp t) =
 
 ddMmYy : Time.Zone -> Timestamp -> String
 ddMmYy zone t =
-    let posix = toPosix t in
+    let
+        posix =
+            toPosix t
+    in
     [ String.fromInt (Time.toDay zone posix)
     , " "
     , prettyMonth (Time.toMonth zone posix)
     , " "
     , String.fromInt (Time.toYear zone posix)
     ]
-    |> String.concat
+        |> String.concat
 
 
 prettyMonth : Time.Month -> String
