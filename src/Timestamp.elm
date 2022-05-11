@@ -1,7 +1,7 @@
 module Timestamp exposing
     ( Timestamp
     , daysAgo
-    , ddMmYy
+    , ddMm
     , decode
     , encode
     , fromPosix
@@ -104,8 +104,8 @@ toPosix (Timestamp t) =
     Time.millisToPosix (t * 3600 * 1000 + epoch)
 
 
-ddMmYy : Time.Zone -> Timestamp -> String
-ddMmYy zone t =
+ddMm : Time.Zone -> Timestamp -> String
+ddMm zone t =
     let
         posix =
             toPosix t
@@ -113,8 +113,6 @@ ddMmYy zone t =
     [ String.fromInt (Time.toDay zone posix)
     , " "
     , prettyMonth (Time.toMonth zone posix)
-    , " "
-    , String.fromInt (Time.toYear zone posix)
     ]
         |> String.concat
 

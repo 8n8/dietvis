@@ -1128,7 +1128,12 @@ dailyChartView { zone, now, pageNum, data, toString, more, less } =
 
 barScale : Float
 barScale =
-    200
+    170
+
+
+maxDataPoint : Float
+maxDataPoint =
+    10000
 
 
 dataPointView :
@@ -1159,13 +1164,18 @@ dataPointView { zone, max_, point, toString, date } =
         ]
         Element.none
     , Element.el
-        [ Element.width (Element.px 60) ]
-        (Element.text (toString point))
+        [ Element.width (Element.px 50) ]
+        (Element.text
+            (if point > maxDataPoint then
+                "high"
+
+             else
+                toString point))
     , Element.el
         []
-        (Element.text (Timestamp.ddMmYy zone date))
+        (Element.text (Timestamp.ddMm zone date))
     ]
-        |> Element.row [ Element.spacing 8 ]
+        |> Element.row [ Element.spacing 5 ]
 
 
 saved notificationStatus =
