@@ -1080,7 +1080,8 @@ viewOk model =
     ]
         |> Element.column
             [ Element.spacing 15
-            , Element.width Element.fill
+            , Element.width (Element.maximum 600 Element.fill)
+            , Element.centerX
             ]
 
 
@@ -1126,12 +1127,12 @@ dailyChartView { zone, now, pageNum, data, toString, more, less } =
         { pageNum = pageNum, more = more, less = less }
     ]
         |> List.concat
-        |> Element.column [normalFontSize, Element.spacing 5]
+        |> Element.column [normalFontSize, Element.spacing 8]
 
 
 barScale : Float
 barScale =
-    170
+    200
 
 
 maxDataPoint : Float
@@ -1157,7 +1158,8 @@ dataPointView { zone, max_, point, toString, date } =
     in
     [ Element.el
         [ Element.width (Element.px (round barWidth))
-        , Element.height (Element.px 12)
+        , Element.height (Element.px 4)
+        , Element.moveUp 2
         , Background.color blueMountain
         ]
         Element.none
