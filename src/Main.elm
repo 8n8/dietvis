@@ -989,10 +989,6 @@ viewElement model =
 
 viewOk : OkModel -> Element Msg
 viewOk model =
-    let
-        _ =
-            Debug.log "meals" model.meals
-    in
     [ header "Amount eaten today"
     , Meals.energyToday model.meals model.now model.zone
         |> energyTodayView
@@ -1123,7 +1119,7 @@ dailyChartView { zone, now, pageNum, data, toString, more, less } =
         { pageNum = pageNum, more = more, less = less }
     ]
         |> List.concat
-        |> Element.column []
+        |> Element.column [normalFontSize, Element.spacing 5]
 
 
 barScale : Float
@@ -1206,7 +1202,7 @@ bodyWeightView bodyWeightBox notificationStatus =
     , saved notificationStatus
     ]
         |> List.concat
-        |> Element.wrappedRow [ Element.spacing 8 ]
+        |> Element.wrappedRow [ Element.spacing 8, normalFontSize ]
 
 
 saveButton msg =
@@ -1233,7 +1229,7 @@ waistSizeView waistSizeBox notificationStatus =
     , saved notificationStatus
     ]
         |> List.concat
-        |> Element.wrappedRow [ Element.spacing 8 ]
+        |> Element.wrappedRow [ Element.spacing 8, normalFontSize ]
 
 
 makeNewFoodView : String -> String -> NotificationStatus -> Element Msg
@@ -1262,7 +1258,7 @@ makeNewFoodView description energy notificationStatus =
     , saved notificationStatus
     ]
         |> List.concat
-        |> Element.column [ Element.spacing 8 ]
+        |> Element.column [ Element.spacing 8, normalFontSize ]
 
 
 type NotificationStatus
@@ -1278,7 +1274,9 @@ makeNewMealView selectedFood mealWeightBox notificationStatus =
 
         Just selectedFood_ ->
             Element.column
-                [ Element.spacing 8 ]
+                [ Element.spacing 8
+                , normalFontSize
+                ]
                 [ selectedFoodView selectedFood_
                 , [ mealWeightBoxView mealWeightBox |> List.singleton
                   , mealWeightBoxError mealWeightBox
@@ -1344,13 +1342,18 @@ submitMealButton =
         }
 
 
+normalFontSize =
+    Font.size 15
+    
+
+
 selectedFoodView : Food -> Element Msg
 selectedFoodView food =
     Element.paragraph
         [ Font.size 30 ]
         [ "Selected food: "
             |> Element.text
-            |> Element.el [ Font.size 20, Font.regular ]
+            |> Element.el [ normalFontSize, Font.regular ]
         , food
             |> Food.description
             |> FoodDescription.toString
@@ -1404,6 +1407,7 @@ foodSearchView customFoods searchBox pageNum =
         [ Font.color darkBrown
         , Element.spacing 8
         , Element.width Element.fill
+        , normalFontSize
         ]
         (foodSearchBoxView searchBox
             :: (foodSearchResultsView matches
@@ -1419,7 +1423,7 @@ foodSearchView customFoods searchBox pageNum =
 header : String -> Element Msg
 header text =
     Element.el
-        [ Font.size 25
+        [ Font.size 20
         , Region.heading 1
         , Font.color blueMountain
         ]
@@ -1544,6 +1548,7 @@ energyTodayView energy =
             |> Element.text
             |> Element.el [ Font.size 50 ]
         , Element.text " kCal eaten today"
+            |> Element.el [normalFontSize]
         ]
 
 
