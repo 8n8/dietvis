@@ -987,6 +987,20 @@ viewElement model =
             viewOk okModel
 
 
+bodyToString : Float -> String
+bodyToString =
+    (*) 10
+        >> round
+        >> toFloat
+        >> (\f -> f / 10)
+        >> String.fromFloat
+        >> (\s ->
+            if s == "0" then
+                "-"
+            else
+                s)
+
+
 viewOk : OkModel -> Element Msg
 viewOk model =
     [ header "Amount eaten today"
@@ -1022,12 +1036,7 @@ viewOk model =
                 model.zone
                 model.bodyWeightRecords
                 model.now
-        , toString =
-            (*) 10
-                >> round
-                >> toFloat
-                >> (\f -> f / 10)
-                >> String.fromFloat
+        , toString = bodyToString
         }
     , header "Waist size chart"
     , dailyChartView
@@ -1041,12 +1050,7 @@ viewOk model =
                 model.zone
                 model.waistSizeRecords
                 model.now
-        , toString =
-            (*) 10
-                >> round
-                >> toFloat
-                >> (\f -> f / 10)
-                >> String.fromFloat
+        , toString = bodyToString
         }
     , header "Daily calories chart"
     , dailyChartView
@@ -1056,7 +1060,10 @@ viewOk model =
         , more = OneMoreMealsPage
         , less = OneLessMealsPage
         , data = Meals.dailyCalories model.zone model.meals model.now
-        , toString = round >> String.fromInt
+        , toString =
+            round
+                >> String.fromInt
+                >> (\s -> if s == "0" then "-" else s)
         }
     , header "Download your data"
     , Input.button
@@ -1474,6 +1481,7 @@ lessMoreStyle =
     , Border.width 1
     , Border.color mustard
     , Border.rounded 3
+    , normalFontSize
     ]
 
 
