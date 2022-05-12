@@ -1191,7 +1191,7 @@ bodyWeightView bodyWeightBox notificationStatus =
     [ { onChange = BodyWeightBox
       , label =
             Element.text "Body weight in kg:"
-                |> Input.labelLeft []
+                |> Input.labelAbove []
       , placeholder = Nothing
       , text = bodyWeightBox
       }
@@ -1202,7 +1202,7 @@ bodyWeightView bodyWeightBox notificationStatus =
     , saved notificationStatus
     ]
         |> List.concat
-        |> Element.wrappedRow [ Element.spacing 8, normalFontSize ]
+        |> Element.column [ Element.spacing 8, normalFontSize ]
 
 
 saveButton msg =
@@ -1218,7 +1218,7 @@ waistSizeView waistSizeBox notificationStatus =
     [ { onChange = WaistSizeBox
       , label =
             Element.text "Waist size in cm:"
-                |> Input.labelLeft []
+                |> Input.labelAbove []
       , placeholder = Nothing
       , text = waistSizeBox
       }
@@ -1229,14 +1229,14 @@ waistSizeView waistSizeBox notificationStatus =
     , saved notificationStatus
     ]
         |> List.concat
-        |> Element.wrappedRow [ Element.spacing 8, normalFontSize ]
+        |> Element.column [ Element.spacing 8, normalFontSize ]
 
 
 makeNewFoodView : String -> String -> NotificationStatus -> Element Msg
 makeNewFoodView description energy notificationStatus =
     [ { onChange = NewFoodDescriptionBox
       , label =
-            Input.labelLeft
+            Input.labelAbove
                 []
                 (Element.text "Food description:")
       , placeholder = Nothing
@@ -1247,7 +1247,7 @@ makeNewFoodView description energy notificationStatus =
     , boxErr description FoodDescription.fromString
     , { onChange = NewFoodEnergyBox
       , label =
-            Input.labelLeft [] (Element.text "Food energy in kCal per 100g:")
+            Input.labelAbove [] (Element.text "Food energy in kCal per 100g:")
       , placeholder = Nothing
       , text = energy
       }
@@ -1319,7 +1319,7 @@ mealWeightBoxView contents =
         { onChange = MealWeightBox
         , text = contents
         , placeholder = Nothing
-        , label = Input.labelLeft [] (Element.text "Meal weight in grams: ")
+        , label = Input.labelAbove [] (Element.text "Meal weight in grams: ")
         }
 
 
@@ -1534,7 +1534,7 @@ foodSearchBoxView contents =
         { onChange = FoodSearchBox
         , text = contents
         , placeholder = Nothing
-        , label = Input.labelLeft [] (Element.text "Food search:")
+        , label = Input.labelAbove [] (Element.text "Food search:")
         }
 
 
