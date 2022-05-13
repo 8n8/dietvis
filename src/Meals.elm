@@ -80,9 +80,6 @@ mealDailyBin zone now meal bins =
             Timestamp.daysAgo
                 { now = now, t = Meal.timestamp meal, zone = zone }
 
-        _ =
-            Debug.log "daysOld" daysOld
-
         kCal =
             meal |> Meal.energy |> Energy.toKcal |> toFloat
     in

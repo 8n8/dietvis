@@ -995,18 +995,38 @@ bodyToString =
         >> (\f -> f / 10)
         >> String.fromFloat
         >> (\s ->
-            if s == "0" then
-                "-"
-            else
-                s)
+                if s == "0" then
+                    "-"
+
+                else
+                    s
+           )
+
+
+paragraph : String -> Element Msg
+paragraph =
+    Element.text
+        >> Element.el [ normalFontSize ]
+        >> List.singleton
+        >> Element.paragraph [ Font.color darkBrown ]
 
 
 viewOk : OkModel -> Element Msg
 viewOk model =
-    [ header "Amount eaten today"
+    [ Element.text "Visualising diet data"
+        |> Element.el
+            [ Font.size 30
+            , Region.heading 1
+            , Font.color mustard
+            ]
+    , paragraph "This page is a tool for recording and visualising data for a calorie counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
+    , paragraph "The data is kept locally and is never shared with anyone else. It can be downloaded to a file for permanent storage, and uploaded again. Note that clearing browser data will delete the data in this tool. The data will be permanently lost unless it has been downloaded to a file."
+    , header "Amount eaten today"
+    , paragraph "The total number of calories consumed today."
     , Meals.energyToday model.meals model.now model.zone
         |> energyTodayView
     , header "Record a meal"
+    , paragraph "To record a meal, first find the food by typing in the search box. Then enter the weight of the meal. If the food is not in the list, make a new one in the next section."
     , foodSearchView
         model.customFoods
         model.foodSearchBox
@@ -1016,6 +1036,7 @@ viewOk model =
         model.mealWeightBox
         model.mealNotification
     , header "Record a new food"
+    , paragraph "This section is for adding a new type of food to the database. First check if it is already there by searching in the previous section. If not, enter a description for the new food, and the energy."
     , makeNewFoodView
         model.newFoodDescriptionBox
         model.newFoodEnergyBox
@@ -1025,6 +1046,7 @@ viewOk model =
     , header "Record a waist size"
     , waistSizeView model.waistSizeBox model.waistSizeNotification
     , header "Body weight chart"
+    , paragraph "This chart shows the average weight for each day, in kilograms. A dash means that there was no weight recorded for that day."
     , dailyChartView
         { zone = model.zone
         , now = model.now
@@ -1039,6 +1061,7 @@ viewOk model =
         , toString = bodyToString
         }
     , header "Waist size chart"
+    , paragraph "This chart shows the average waist size for each day, in centimeters."
     , dailyChartView
         { zone = model.zone
         , now = model.now
@@ -1053,6 +1076,7 @@ viewOk model =
         , toString = bodyToString
         }
     , header "Daily calories chart"
+    , paragraph "This chart shows the total calories recorded for each day, in kCal."
     , dailyChartView
         { zone = model.zone
         , now = model.now
@@ -1063,15 +1087,23 @@ viewOk model =
         , toString =
             round
                 >> String.fromInt
-                >> (\s -> if s == "0" then "-" else s)
+                >> (\s ->
+                        if s == "0" then
+                            "-"
+
+                        else
+                            s
+                   )
         }
     , header "Download your data"
+    , paragraph "Click this button to download all the data. It's a good idea to do this now and then in case the browser data is deleted."
     , Input.button
         lessMoreStyle
         { onPress = Just DownloadData
         , label = Element.text "Download data"
         }
     , header "Upload your data"
+    , paragraph "This button is for uploading a previously downloaded data file, and restoring the data in the tool to an earlier point. Note that this will overwrite the data currently in the tool."
     , Input.button
         lessMoreStyle
         { onPress = Just UploadData
@@ -1080,7 +1112,7 @@ viewOk model =
     ]
         |> Element.column
             [ Element.spacing 15
-            , Element.width (Element.maximum 600 Element.fill)
+            , Element.width (Element.maximum 500 Element.fill)
             , Element.centerX
             ]
 
@@ -1127,7 +1159,7 @@ dailyChartView { zone, now, pageNum, data, toString, more, less } =
         { pageNum = pageNum, more = more, less = less }
     ]
         |> List.concat
-        |> Element.column [normalFontSize, Element.spacing 8]
+        |> Element.column [ normalFontSize, Element.spacing 8 ]
 
 
 barScale : Float
@@ -1175,7 +1207,9 @@ dataPointView { zone, max_, point, toString, date } =
                 "high"
 
              else
-                toString point))
+                toString point
+            )
+        )
     , Element.el
         []
         (Element.text (Timestamp.ddMm zone date))
@@ -1353,7 +1387,6 @@ submitMealButton =
 
 normalFontSize =
     Font.size 15
-    
 
 
 selectedFoodView : Food -> Element Msg
@@ -1433,7 +1466,7 @@ header : String -> Element Msg
 header text =
     Element.el
         [ Font.size 20
-        , Region.heading 1
+        , Region.heading 2
         , Font.color blueMountain
         ]
         (Element.text text)
@@ -1557,8 +1590,8 @@ energyTodayView energy =
             |> String.fromInt
             |> Element.text
             |> Element.el [ Font.size 50 ]
-        , Element.text " kCal eaten today"
-            |> Element.el [normalFontSize]
+        , Element.text " kCal"
+            |> Element.el [ normalFontSize ]
         ]
 
 

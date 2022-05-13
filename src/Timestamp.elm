@@ -56,20 +56,10 @@ isToday { now, t, zone } =
     let
         midnight =
             latestMidnight now zone
-
-        _ =
-            Debug.log "midnight" midnight
-
-        _ =
-            Debug.log "now" now
-
-        _ =
-            Debug.log "t" t
     in
     midnight
         |> Result.map (\m -> greaterThanOrEqual t m)
         |> Result.withDefault False
-        |> Debug.log "isToday"
 
 
 greaterThanOrEqual : Timestamp -> Timestamp -> Bool
