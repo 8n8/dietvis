@@ -3,6 +3,7 @@ port module Main exposing (main)
 import BodyWeight exposing (BodyWeight)
 import BodyWeightRecords exposing (BodyWeightRecords)
 import Browser
+import Browser.Dom as Dom
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
@@ -19,6 +20,7 @@ import FoodDescription exposing (FoodDescription)
 import FoodMass exposing (FoodMass)
 import Foods exposing (Foods)
 import Html exposing (Html)
+import Html.Attributes
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Meal exposing (Meal)
@@ -42,6 +44,7 @@ type Model
 
 type Msg
     = FoodSearchBox String
+    | NoOp
     | BadTimestamp
     | Now Timestamp
     | Zone Time.Zone
@@ -67,6 +70,7 @@ type Msg
     | UploadData
     | SelectedFile File
     | FileLoaded String
+    | SelectedFoodPosition (Result Dom.Error Dom.Element)
 
 
 port toLocalStorage : String -> Cmd msg
@@ -322,6 +326,12 @@ updateLoadingTime cache zone msg =
         FileLoaded _ ->
             nothing
 
+        SelectedFoodPosition _ ->
+            nothing
+
+        NoOp ->
+            nothing
+
 
 initModelHelp : Cache -> Time.Zone -> Timestamp -> OkModel
 initModelHelp cache zone now =
@@ -459,6 +469,12 @@ updateLoadingZone cache timestamp msg =
         FileLoaded _ ->
             nothing
 
+        SelectedFoodPosition _ ->
+            nothing
+
+        NoOp ->
+            nothing
+
 
 updateLoadingZoneAndTime : Cache -> Msg -> ( Model, Cmd Msg )
 updateLoadingZoneAndTime cache msg =
@@ -543,6 +559,12 @@ updateLoadingZoneAndTime cache msg =
             nothing
 
         FileLoaded _ ->
+            nothing
+
+        SelectedFoodPosition _ ->
+            nothing
+
+        NoOp ->
             nothing
 
 
@@ -631,7 +653,9 @@ updateOk msg model =
                     , foodSearchBox = ""
                     , foodSearchResultsPage = PageNum.empty
                 }
-            , Cmd.none
+            , Task.attempt
+                SelectedFoodPosition
+                (Dom.getElement "selectedFood")
             )
 
         OneMoreFoodSearchPage ->
@@ -864,6 +888,19 @@ updateOk msg model =
         Zone zone ->
             ( Ok_ { model | zone = zone }, Cmd.none )
 
+        SelectedFoodPosition (Err _) ->
+            ( Ok_ model, Cmd.none )
+
+        SelectedFoodPosition (Ok { element }) ->
+            ( Ok_ model
+            , Task.perform
+                (\_ -> NoOp)
+                (Dom.setViewport element.x element.y)
+            )
+
+        NoOp ->
+            ( Ok_ model, Cmd.none )
+
 
 type alias RawFood =
     { description : String
@@ -948,7 +985,8 @@ view model =
     Element.layout
         [ Font.family [ Font.serif ]
         , Element.width Element.fill
-        , Element.padding 8
+        , Element.paddingEach
+            { top = 25, bottom = 160, left = 20, right = 20 }
         , Background.color white
         ]
         (viewElement model)
@@ -1019,13 +1057,17 @@ viewOk model =
             , Region.heading 1
             , Font.color mustard
             ]
-    , paragraph "This page is a tool for recording and visualising data for a calorie counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
-    , paragraph "The data is kept locally and is never shared with anyone else. It can be downloaded to a file for permanent storage, and uploaded again. Note that clearing browser data will delete the data in this tool. The data will be permanently lost unless it has been downloaded to a file."
+    , paragraph "This is a tool for recording and visualising data for a calorie-counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
+    , paragraph "The data is kept locally and is never shared with anyone else. It can be saved to a file for permanent storage. Note that clearing browser data will delete the data in this tool."
     , header "Amount eaten today"
     , paragraph "The total number of calories consumed today."
     , Meals.energyToday model.meals model.now model.zone
         |> energyTodayView
     , header "Record a meal"
+        |> Element.el
+            [ Html.Attributes.id "selectedFood"
+                |> Element.htmlAttribute
+            ]
     , paragraph "To record a meal, first find the food by typing in the search box. Then enter the weight of the meal. If the food is not in the list, make a new one in the next section."
     , foodSearchView
         model.customFoods
@@ -1042,8 +1084,10 @@ viewOk model =
         model.newFoodEnergyBox
         model.foodNotification
     , header "Record a body weight"
+    , paragraph "This will record the body weight and add it to the charts."
     , bodyWeightView model.bodyWeightBox model.bodyWeightNotification
     , header "Record a waist size"
+    , paragraph "This will record the waist size and add it to the charts."
     , waistSizeView model.waistSizeBox model.waistSizeNotification
     , header "Body weight chart"
     , paragraph "This chart shows the average weight for each day, in kilograms. A dash means that there was no weight recorded for that day."
@@ -1098,21 +1142,23 @@ viewOk model =
     , header "Download your data"
     , paragraph "Click this button to download all the data. It's a good idea to do this now and then in case the browser data is deleted."
     , Input.button
-        lessMoreStyle
+        (Element.alignRight :: lessMoreStyle)
         { onPress = Just DownloadData
         , label = Element.text "Download data"
         }
+        |> Element.el [ Element.width Element.fill ]
     , header "Upload your data"
     , paragraph "This button is for uploading a previously downloaded data file, and restoring the data in the tool to an earlier point. Note that this will overwrite the data currently in the tool."
     , Input.button
-        lessMoreStyle
+        (Element.alignRight :: lessMoreStyle)
         { onPress = Just UploadData
         , label = Element.text "Upload data"
         }
+        |> Element.el [ Element.width Element.fill ]
     ]
         |> Element.column
             [ Element.spacing 15
-            , Element.width (Element.maximum 500 Element.fill)
+            , Element.width (Element.maximum 700 Element.fill)
             , Element.centerX
             ]
 
@@ -1217,16 +1263,20 @@ dataPointView { zone, max_, point, toString, date } =
         |> Element.row [ Element.spacing 5 ]
 
 
+saved : NotificationStatus -> Element Msg
 saved notificationStatus =
     case notificationStatus of
         On ->
             Element.el
-                [ Background.color yellow ]
+                [ Background.color yellow
+                , Element.alignRight
+                , Font.color darkBrown
+                , Element.moveDown 4
+                ]
                 (Element.text "saved")
-                |> List.singleton
 
         Off ->
-            []
+            Element.none
 
 
 bodyWeightView : String -> NotificationStatus -> Element Msg
@@ -1238,22 +1288,33 @@ bodyWeightView bodyWeightBox notificationStatus =
       , placeholder = Nothing
       , text = bodyWeightBox
       }
-        |> Input.text [ Element.width (Element.px 100) ]
+        |> Input.text
+            [ Element.width (Element.px 100)
+            , boxErr bodyWeightBox BodyWeight.fromKgString
+                |> Element.below
+            ]
         |> List.singleton
-    , boxErr bodyWeightBox BodyWeight.fromKgString
-    , saveButton SubmitBodyWeight
-    , saved notificationStatus
+    , saveButton notificationStatus SubmitBodyWeight
+        |> List.singleton
     ]
         |> List.concat
-        |> Element.column [ Element.spacing 8, normalFontSize ]
+        |> Element.row
+            [ Element.spacing 8
+            , normalFontSize
+            , Element.width Element.fill
+            ]
 
 
-saveButton msg =
+saveButton notificationStatus msg =
     { onPress = Just msg
     , label = Element.text "Save"
     }
-        |> Input.button lessMoreStyle
-        |> List.singleton
+        |> Input.button
+            (Element.alignRight
+                :: Element.moveDown 11
+                :: Element.below (saved notificationStatus)
+                :: lessMoreStyle
+            )
 
 
 waistSizeView : String -> NotificationStatus -> Element Msg
@@ -1265,14 +1326,17 @@ waistSizeView waistSizeBox notificationStatus =
       , placeholder = Nothing
       , text = waistSizeBox
       }
-        |> Input.text [ Element.width (Element.px 100) ]
+        |> Input.text
+            [ Element.width (Element.px 100)
+            , boxErr waistSizeBox WaistSize.fromCmString
+                |> Element.below
+            ]
         |> List.singleton
-    , saveButton SubmitWaistSize
-    , boxErr waistSizeBox WaistSize.fromCmString
-    , saved notificationStatus
+    , saveButton notificationStatus SubmitWaistSize
+        |> List.singleton
     ]
         |> List.concat
-        |> Element.column [ Element.spacing 8, normalFontSize ]
+        |> Element.row [ Element.spacing 8, normalFontSize, Element.width Element.fill ]
 
 
 makeNewFoodView : String -> String -> NotificationStatus -> Element Msg
@@ -1285,23 +1349,38 @@ makeNewFoodView description energy notificationStatus =
       , placeholder = Nothing
       , text = description
       }
-        |> Input.text [ Element.width (Element.maximum 400 Element.fill), Element.alignLeft ]
+        |> Input.text
+            [ Element.width (Element.maximum 400 Element.fill)
+            , Element.alignLeft
+            , boxErr description FoodDescription.fromString
+                |> Element.below
+            ]
         |> List.singleton
-    , boxErr description FoodDescription.fromString
-    , { onChange = NewFoodEnergyBox
-      , label =
+    , [ { onChange = NewFoodEnergyBox
+        , label =
             Input.labelAbove [] (Element.text "Food energy in kCal per 100g:")
-      , placeholder = Nothing
-      , text = energy
-      }
-        |> Input.text [ Element.width (Element.px 100) ]
+        , placeholder = Nothing
+        , text = energy
+        }
+            |> Input.text
+                [ Element.width (Element.px 100)
+                , boxErr energy EnergyRate.fromKcalPer100gString
+                    |> Element.below
+                ]
+            |> List.singleton
+      , saveButton notificationStatus SubmitNewFood
+            |> List.singleton
+      ]
+        |> List.concat
+        |> Element.row [ Element.spacing 8, Element.width Element.fill ]
         |> List.singleton
-    , boxErr energy EnergyRate.fromKcalPer100gString
-    , saveButton SubmitNewFood
-    , saved notificationStatus
     ]
         |> List.concat
-        |> Element.column [ Element.spacing 8, normalFontSize ]
+        |> Element.column
+            [ Element.spacing 8
+            , normalFontSize
+            , Element.width Element.fill
+            ]
 
 
 type NotificationStatus
@@ -1316,54 +1395,48 @@ makeNewMealView selectedFood mealWeightBox notificationStatus =
             Element.none
 
         Just selectedFood_ ->
-            Element.column
-                [ Element.spacing 8
-                , normalFontSize
-                ]
-                [ selectedFoodView selectedFood_
-                , [ mealWeightBoxView mealWeightBox |> List.singleton
-                  , mealWeightBoxError mealWeightBox
-                  ]
-                    |> List.concat
-                    |> Element.wrappedRow [ Element.spacing 8 ]
-                , [ saveButton SubmitMeal
-                  , saved notificationStatus
-                  ]
-                    |> List.concat
-                    |> Element.row [ Element.spacing 8 ]
-                ]
+            [ selectedFoodView selectedFood_
+            , [ mealWeightBoxView mealWeightBox
+              , saveButton notificationStatus SubmitMeal
+              ]
+                |> Element.row
+                    [ Element.spacing 8
+                    , Element.width Element.fill
+                    ]
+            ]
+                |> Element.column [ Element.spacing 8, normalFontSize ]
 
 
-mealWeightBoxError : String -> List (Element Msg)
-mealWeightBoxError contents =
-    boxErr contents FoodMass.fromGramString
-
-
-boxErr : String -> (String -> Result String a) -> List (Element Msg)
+boxErr : String -> (String -> Result String a) -> Element Msg
 boxErr contents f =
     if contents == "" then
-        []
+        Element.none
 
     else
         case f contents of
             Err err ->
                 Element.text err
-                    |> Element.el [ Background.color yellow ]
-                    |> List.singleton
+                    |> Element.el
+                        [ Background.color yellow
+                        , Element.moveDown 4
+                        ]
 
             Ok _ ->
-                []
+                Element.none
 
 
 mealWeightBoxView : String -> Element Msg
 mealWeightBoxView contents =
-    Input.text
-        [ Element.width (Element.px 100) ]
-        { onChange = MealWeightBox
-        , text = contents
-        , placeholder = Nothing
-        , label = Input.labelAbove [] (Element.text "Meal weight in grams: ")
-        }
+    { onChange = MealWeightBox
+    , text = contents
+    , placeholder = Nothing
+    , label = Input.labelAbove [] (Element.text "Meal weight in grams: ")
+    }
+        |> Input.text
+            [ Element.width (Element.px 100)
+            , boxErr contents FoodMass.fromGramString
+                |> Element.below
+            ]
 
 
 submitButtonStyle =
@@ -1386,20 +1459,19 @@ submitMealButton =
 
 
 normalFontSize =
-    Font.size 15
+    Font.size 18
 
 
 selectedFoodView : Food -> Element Msg
 selectedFoodView food =
     Element.paragraph
-        [ Font.size 30 ]
-        [ "Selected food: "
-            |> Element.text
-            |> Element.el [ normalFontSize, Font.regular ]
+        [ normalFontSize ]
+        [ Element.text "Selected food: "
         , food
             |> Food.description
             |> FoodDescription.toString
             |> Element.text
+            |> Element.el [ Font.semiBold ]
         , food
             |> Food.energyRate
             |> EnergyRate.energy
@@ -1407,6 +1479,7 @@ selectedFoodView food =
             |> String.fromInt
             |> (\s -> " (" ++ s ++ " kCal / 100g)")
             |> Element.text
+            |> Element.el [ Font.semiBold ]
         ]
 
 
@@ -1465,7 +1538,7 @@ foodSearchView customFoods searchBox pageNum =
 header : String -> Element Msg
 header text =
     Element.el
-        [ Font.size 20
+        [ Font.size 24
         , Region.heading 2
         , Font.color blueMountain
         ]
@@ -1509,7 +1582,7 @@ moreResultsButton msg =
 
 lessMoreStyle : List (Element.Attribute Msg)
 lessMoreStyle =
-    [ Element.padding 15
+    [ Element.padding 12
     , Element.mouseOver [ Background.color whiteHover ]
     , Border.solid
     , Font.color mustard
@@ -1573,7 +1646,7 @@ foodSearchResultView food =
 foodSearchBoxView : String -> Element Msg
 foodSearchBoxView contents =
     Input.text
-        [ Element.width (Element.maximum 400 Element.fill) ]
+        [ Element.width (Element.maximum 600 Element.fill) ]
         { onChange = FoodSearchBox
         , text = contents
         , placeholder = Nothing
