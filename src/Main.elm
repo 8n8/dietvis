@@ -1194,7 +1194,6 @@ viewOk model =
       , Element.text "."
       ]
         |> Element.paragraph [ normalFontSize, Font.color darkBrown ]
-    , paragraph "The data is kept locally and never shared with anyone else."
     ]
         |> Element.column
             [ Element.spacing 15
@@ -1750,16 +1749,19 @@ foodSearchBoxView contents =
 
 energyTodayView : Energy -> Element Msg
 energyTodayView energy =
-    Element.paragraph
-        [ Font.color darkBrown ]
-        [ energy
-            |> Energy.toKcal
-            |> String.fromInt
-            |> Element.text
-            |> Element.el [ Font.size 30 ]
-        , Element.text " kCal"
-            |> Element.el [ normalFontSize ]
-        ]
+    [ energy
+        |> Energy.toKcal
+        |> String.fromInt
+        |> Element.text
+        |> Element.el [ Font.size 30 ]
+    , Element.text " kCal"
+        |> Element.el [ normalFontSize ]
+    ]
+        |> Element.paragraph
+            [ Font.color darkBrown ]
+        |> Element.el [ Element.centerX ]
+        |> Element.el
+            [ Element.width Element.fill ]
 
 
 viewFatalError : String -> Element Msg
