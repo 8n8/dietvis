@@ -1060,7 +1060,7 @@ viewOk model =
     , paragraph "This is a tool for recording and visualising data for a calorie-counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
     , paragraph "The data is kept locally and is never shared with anyone else. It can be saved to a file for permanent storage. Note that clearing browser data will delete the data in this tool."
     , header "Amount eaten today"
-    , paragraph "The total number of calories consumed today."
+    , paragraph "The total number of calories consumed today is:"
     , Meals.energyToday model.meals model.now model.zone
         |> energyTodayView
     , header "Record a meal"
@@ -1090,7 +1090,7 @@ viewOk model =
     , paragraph "This will record the waist size and add it to the charts."
     , waistSizeView model.waistSizeBox model.waistSizeNotification
     , header "Body weight chart"
-    , paragraph "This chart shows the average weight for each day, in kilograms. A dash means that there was no weight recorded for that day."
+    , paragraph "This chart shows the average body weight for each day, in kilograms. A dash means that there was no weight recorded for that day."
     , dailyChartView
         { zone = model.zone
         , now = model.now
@@ -1139,7 +1139,7 @@ viewOk model =
                             s
                    )
         }
-    , header "Download your data"
+    , header "Download data"
     , paragraph "Click this button to download all the data. It's a good idea to do this now and then in case the browser data is deleted."
     , Input.button
         (Element.alignRight :: lessMoreStyle)
@@ -1147,7 +1147,7 @@ viewOk model =
         , label = Element.text "Download data"
         }
         |> Element.el [ Element.width Element.fill ]
-    , header "Upload your data"
+    , header "Upload data"
     , paragraph "This button is for uploading a previously downloaded data file, and restoring the data in the tool to an earlier point. Note that this will overwrite the data currently in the tool."
     , Input.button
         (Element.alignRight :: lessMoreStyle)
@@ -1155,6 +1155,23 @@ viewOk model =
         , label = Element.text "Upload data"
         }
         |> Element.el [ Element.width Element.fill ]
+    , header "About this tool"
+    , [ Element.text "The food database was downloaded from the website of the US Department of Agriculture at "
+      , { url = "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_survey_food_json_2021-10-28.zip"
+        , label = Element.text "https://fdc.nal.usda.gov/fdc-datasets/FoodData_Central_survey_food_json_2021-10-28.zip"
+        }
+            |> Element.link [ Font.color blueLink ]
+      , Element.text "."
+      ]
+        |> Element.paragraph [ normalFontSize, Font.color darkBrown ]
+    , [ Element.text "The code for this site is available on Github at "
+      , { url = "https://github.com/8n8/dietvis"
+        , label = Element.text "https://github.com/8n8/dietvis"
+        }
+            |> Element.link [ Font.color blueLink ]
+      , Element.text "."
+      ]
+        |> Element.paragraph [ normalFontSize, Font.color darkBrown ]
     ]
         |> Element.column
             [ Element.spacing 15
@@ -1715,6 +1732,11 @@ beige =
 yellow : Element.Color
 yellow =
     Element.rgb255 255 176 63
+
+
+blueLink : Element.Color
+blueLink =
+    Element.rgb255 107 150 184
 
 
 blueMountain : Element.Color
