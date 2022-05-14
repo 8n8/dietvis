@@ -987,10 +987,11 @@ view model =
             [ Font.size 18
             , Region.heading 1
             , Font.color darkBrown
-            , Element.paddingXY 0 8
+            , Element.paddingXY 20 8
             , Font.bold
             , Font.family [ Font.sansSerif ]
             , Element.centerX
+            , Element.width (Element.maximum 700 Element.fill)
             ]
         |> Element.el
             [ Background.color bluePaleSky
