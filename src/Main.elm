@@ -982,7 +982,7 @@ init flags =
 
 view : Model -> Html Msg
 view model =
-    [ Element.text "Diet tracking tool"
+    [ Element.text "Diet tracker"
         |> Element.el
             [ Font.size 18
             , Region.heading 1
@@ -991,7 +991,7 @@ view model =
             , Font.bold
             , Font.family [ Font.sansSerif ]
             , Element.centerX
-            , Element.width (Element.maximum 700 Element.fill)
+            , Element.width (Element.maximum 800 Element.fill)
             ]
         |> Element.el
             [ Background.color bluePaleSky
@@ -1067,8 +1067,7 @@ paragraph =
 
 viewOk : OkModel -> Element Msg
 viewOk model =
-    [ paragraph "This is a tool for tracking the numbers in a calorie-counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
-    , paragraph "The data is kept locally and never shared with anyone else. It can be saved to a file for permanent storage. Clearing browser data will reset everything."
+    [ paragraph "A tool for tracking a calorie-counting diet."
     , header "Amount eaten today"
     , paragraph "The total number of calories consumed today is:"
     , Meals.energyToday model.meals model.now model.zone
@@ -1100,45 +1099,57 @@ viewOk model =
     , paragraph "This will record waist size and add it to the charts."
     , waistSizeView model.waistSizeBox model.waistSizeNotification
     , header "Body weight chart"
-    , paragraph "This chart shows the average body weight for each day, in kilograms, compared to the first day. A dash means that there was no weight recorded for that day. Weights are compared to the first one recorded, so a brown bar means the weight was less than the first one, and a blue bar means it was greater. The charts get more interesting when there are several days of data."
+    , paragraph "This chart shows the average body weight for each day, in kilograms, compared to the overall average. A dash means that there was no weight recorded for that day. A brown bar means the weight was less than the average, and a blue bar means it was greater."
     , dailyChartView
-        { zone = model.zone
-        , now = model.now
-        , pageNum = model.bodyWeightsPage
-        , more = OneMoreBodyWeightPage
-        , less = OneLessBodyWeightPage
-        , data =
-            BodyWeightRecords.dailyAverage
-                model.zone
-                model.bodyWeightRecords
-                model.now
-        , toString = bodyToString
-        }
+        (let
+            data =
+                BodyWeightRecords.dailyAverage
+                    model.zone
+                    model.bodyWeightRecords
+                    model.now
+         in
+         { zone = model.zone
+         , now = model.now
+         , pageNum = model.bodyWeightsPage
+         , more = OneMoreBodyWeightPage
+         , less = OneLessBodyWeightPage
+         , data = data
+         , toString = bodyToString
+         }
+        )
     , header "Waist size chart"
-    , paragraph "This chart shows the average waist size for each day, in centimeters, compared to the first day."
+    , paragraph "This chart shows the average waist size for each day, in centimeters, compared to the overall average."
     , dailyChartView
-        { zone = model.zone
-        , now = model.now
-        , pageNum = model.waistSizesPage
-        , more = OneMoreWaistSizePage
-        , less = OneLessWaistSizePage
-        , data =
-            WaistSizeRecords.dailyAverage
-                model.zone
-                model.waistSizeRecords
-                model.now
-        , toString = bodyToString
-        }
+        (let
+            data =
+                WaistSizeRecords.dailyAverage
+                    model.zone
+                    model.waistSizeRecords
+                    model.now
+         in
+         { zone = model.zone
+         , now = model.now
+         , pageNum = model.waistSizesPage
+         , more = OneMoreWaistSizePage
+         , less = OneLessWaistSizePage
+         , data = data
+         , toString = bodyToString
+         }
+        )
     , header "Daily calories chart"
     , paragraph "This chart shows the total calories recorded for each day, in kCal, compared to the first day."
     , dailyChartView
-        { zone = model.zone
-        , now = model.now
-        , pageNum = model.mealsPage
-        , more = OneMoreMealsPage
-        , less = OneLessMealsPage
-        , data = Meals.dailyCalories model.zone model.meals model.now
-        , toString =
+        (let
+            data =
+                Meals.dailyCalories model.zone model.meals model.now
+         in
+         { zone = model.zone
+         , now = model.now
+         , pageNum = model.mealsPage
+         , more = OneMoreMealsPage
+         , less = OneLessMealsPage
+         , data = data
+         , toString =
             round
                 >> String.fromInt
                 >> (\s ->
@@ -1148,7 +1159,8 @@ viewOk model =
                         else
                             s
                    )
-        }
+         }
+        )
     , header "Download data"
     , paragraph "Click this button to download all the data. It's a good idea to do this now and then in case the browser data is deleted."
     , Input.button
@@ -1182,10 +1194,11 @@ viewOk model =
       , Element.text "."
       ]
         |> Element.paragraph [ normalFontSize, Font.color darkBrown ]
+    , paragraph "The data is kept locally and never shared with anyone else."
     ]
         |> Element.column
             [ Element.spacing 15
-            , Element.width (Element.maximum 700 Element.fill)
+            , Element.width (Element.maximum 800 Element.fill)
             , Element.centerX
             , Element.paddingEach
                 { top = 0, bottom = 160, left = 20, right = 20 }
@@ -1214,20 +1227,27 @@ dailyChartView { zone, now, pageNum, data, toString, more, less } =
 
         dates =
             Timestamp.nDaysUpTo (List.length data) now
+
+        mean =
+            let
+                len =
+                    data |> List.filter (\f -> f > 0.1) |> List.length
+            in
+            if len == 0 then
+                0
+
+            else
+                List.sum data / toFloat len
     in
     [ List.map2
         (\point date ->
             dataPointView
                 { zone = zone
-                , first =
-                    data
-                        |> List.reverse
-                        |> List.head
-                        |> Maybe.withDefault 0
+                , mean = mean
                 , max_ = List.maximum data |> Maybe.withDefault 0
                 , min_ =
                     data
-                        |> List.filter (\d -> d > 0.1)
+                        |> List.filter (\f -> f > 0.1)
                         |> List.minimum
                         |> Maybe.withDefault 0
                 , point = point
@@ -1257,18 +1277,18 @@ maxDataPoint =
 dataPointView :
     { zone : Time.Zone
     , max_ : Float
-    , first : Float
+    , mean : Float
     , min_ : Float
     , point : Float
     , toString : Float -> String
     , date : Timestamp
     }
     -> Element Msg
-dataPointView { zone, min_, max_, first, point, toString, date } =
+dataPointView { zone, min_, max_, mean, point, toString, date } =
     let
         zero : Float
         zero =
-            abs (first - min_)
+            abs (mean - min_)
 
         range : Float
         range =
@@ -1280,7 +1300,7 @@ dataPointView { zone, min_, max_, first, point, toString, date } =
                 zero
 
             else
-                zero + point - first
+                zero + point - mean
 
         barStart : Float
         barStart =
@@ -1318,8 +1338,8 @@ dataPointView { zone, min_, max_, first, point, toString, date } =
         ]
         Element.none
     , Element.el
-        [ Element.width (Element.px 50)
-        , Element.paddingXY 5 0
+        [ Element.width (Element.px 70)
+        , Element.paddingXY 10 0
         ]
         (Element.text
             (if point > maxDataPoint then
@@ -1611,8 +1631,9 @@ foodSearchView customFoods searchBox pageNum =
 header : String -> Element Msg
 header text =
     Element.el
-        [ Font.size 24
+        [ Font.size 20
         , Region.heading 2
+        , Font.bold
         , Font.color blueMountain
         ]
         (Element.text text)
@@ -1735,7 +1756,7 @@ energyTodayView energy =
             |> Energy.toKcal
             |> String.fromInt
             |> Element.text
-            |> Element.el [ Font.size 50 ]
+            |> Element.el [ Font.size 30 ]
         , Element.text " kCal"
             |> Element.el [ normalFontSize ]
         ]
