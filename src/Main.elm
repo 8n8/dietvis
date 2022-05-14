@@ -1051,14 +1051,20 @@ paragraph =
 
 viewOk : OkModel -> Element Msg
 viewOk model =
-    [ Element.text "Visualising diet data"
+    [ Element.text "Diet tracker"
         |> Element.el
             [ Font.size 30
             , Region.heading 1
             , Font.color mustard
             ]
-    , paragraph "This is a tool for recording and visualising data for a calorie-counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
-    , paragraph "The data is kept locally and is never shared with anyone else. It can be saved to a file for permanent storage. Note that clearing browser data will delete the data in this tool."
+    , Element.el
+        [ Element.width Element.fill
+        , Element.height (Element.px 2)
+        , Background.color mustard
+        ]
+        Element.none
+    , paragraph "This is a tool for tracking the numbers in a calorie-counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
+    , paragraph "The data is kept locally and never shared with anyone else. It can be saved to a file for permanent storage. Clearing browser data will reset everything."
     , header "Amount eaten today"
     , paragraph "The total number of calories consumed today is:"
     , Meals.energyToday model.meals model.now model.zone
@@ -1084,13 +1090,13 @@ viewOk model =
         model.newFoodEnergyBox
         model.foodNotification
     , header "Record a body weight"
-    , paragraph "This will record the body weight and add it to the charts."
+    , paragraph "This will record body weight and add it to the charts."
     , bodyWeightView model.bodyWeightBox model.bodyWeightNotification
     , header "Record a waist size"
-    , paragraph "This will record the waist size and add it to the charts."
+    , paragraph "This will record waist size and add it to the charts."
     , waistSizeView model.waistSizeBox model.waistSizeNotification
     , header "Body weight chart"
-    , paragraph "This chart shows the average body weight for each day, in kilograms. A dash means that there was no weight recorded for that day."
+    , paragraph "This chart shows the average body weight for each day, in kilograms, compared to the first day. A dash means that there was no weight recorded for that day. Weights are compared to the first one recorded, so a brown bar means the weight was less than the first one, and a blue bar means it was greater. The charts get more interesting when there are several days of data."
     , dailyChartView
         { zone = model.zone
         , now = model.now
@@ -1105,7 +1111,7 @@ viewOk model =
         , toString = bodyToString
         }
     , header "Waist size chart"
-    , paragraph "This chart shows the average waist size for each day, in centimeters."
+    , paragraph "This chart shows the average waist size for each day, in centimeters, compared to the first day."
     , dailyChartView
         { zone = model.zone
         , now = model.now
@@ -1120,7 +1126,7 @@ viewOk model =
         , toString = bodyToString
         }
     , header "Daily calories chart"
-    , paragraph "This chart shows the total calories recorded for each day, in kCal."
+    , paragraph "This chart shows the total calories recorded for each day, in kCal, compared to the first day."
     , dailyChartView
         { zone = model.zone
         , now = model.now
@@ -1202,15 +1208,22 @@ dailyChartView { zone, now, pageNum, data, toString, more, less } =
 
         dates =
             Timestamp.nDaysUpTo (List.length data) now
-
-        maxData =
-            List.maximum data |> Maybe.withDefault 0
     in
     [ List.map2
         (\point date ->
             dataPointView
                 { zone = zone
-                , max_ = maxData
+                , first =
+                    data
+                        |> List.reverse
+                        |> List.head
+                        |> Maybe.withDefault 0
+                , max_ = List.maximum data |> Maybe.withDefault 0
+                , min_ =
+                    data
+                        |> List.filter (\d -> d > 0.1)
+                        |> List.minimum
+                        |> Maybe.withDefault 0
                 , point = point
                 , toString = toString
                 , date = date
@@ -1238,24 +1251,59 @@ maxDataPoint =
 dataPointView :
     { zone : Time.Zone
     , max_ : Float
+    , first : Float
+    , min_ : Float
     , point : Float
     , toString : Float -> String
     , date : Timestamp
     }
     -> Element Msg
-dataPointView { zone, max_, point, toString, date } =
+dataPointView { zone, min_, max_, first, point, toString, date } =
     let
-        barWidth =
-            point * barScale / max_
+        zero : Float
+        zero =
+            abs (first - min_)
 
+        range : Float
+        range =
+            max_ - min_
+
+        otherEnd : Float
+        otherEnd =
+            if point < 0.1 then
+                zero
+
+            else
+                zero + point - first
+
+        barStart : Float
+        barStart =
+            barScale * min zero otherEnd / range
+
+        barEnd : Float
+        barEnd =
+            barScale * max zero otherEnd / range
+
+        gap : Float
         gap =
-            barScale - barWidth
+            barScale - barEnd
     in
     [ Element.el
-        [ Element.width (Element.px (round barWidth))
+        [ Element.width (Element.px (round barStart))
         , Element.height (Element.px 4)
         , Element.moveUp 2
-        , Background.color blueMountain
+        ]
+        Element.none
+    , Element.el
+        [ Element.width (Element.px (round (barEnd - barStart)))
+        , Element.height (Element.px 8)
+        , Background.color
+            (if otherEnd < zero then
+                mustard
+
+             else
+                blueMountain
+            )
         ]
         Element.none
     , Element.el
@@ -1264,7 +1312,9 @@ dataPointView { zone, max_, point, toString, date } =
         ]
         Element.none
     , Element.el
-        [ Element.width (Element.px 50) ]
+        [ Element.width (Element.px 50)
+        , Element.paddingXY 5 0
+        ]
         (Element.text
             (if point > maxDataPoint then
                 "high"
@@ -1277,7 +1327,7 @@ dataPointView { zone, max_, point, toString, date } =
         []
         (Element.text (Timestamp.ddMm zone date))
     ]
-        |> Element.row [ Element.spacing 5 ]
+        |> Element.row []
 
 
 saved : NotificationStatus -> Element Msg
