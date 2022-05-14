@@ -984,7 +984,7 @@ view : Model -> Html Msg
 view model =
     [ Element.text "Diet tracking tool"
         |> Element.el
-            [ Font.size 25
+            [ Font.size 22
             , Region.heading 1
             , Font.color darkBrown
             , Element.paddingXY 0 8
