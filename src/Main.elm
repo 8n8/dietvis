@@ -982,14 +982,29 @@ init flags =
 
 view : Model -> Html Msg
 view model =
-    Element.layout
-        [ Font.family [ Font.serif ]
-        , Element.width Element.fill
-        , Element.paddingEach
-            { top = 25, bottom = 160, left = 20, right = 20 }
-        , Background.color white
-        ]
-        (viewElement model)
+    [ Element.text "Diet tracking tool"
+        |> Element.el
+            [ Font.size 25
+            , Region.heading 1
+            , Font.color darkBrown
+            , Element.paddingXY 0 8
+            , Font.bold
+            , Font.family [ Font.sansSerif ]
+            , Element.centerX
+            ]
+        |> Element.el
+            [ Background.color bluePaleSky
+            , Element.width Element.fill
+            , Element.width Element.fill
+            ]
+    , viewElement model
+    ]
+        |> Element.column [ Element.width Element.fill, Element.spacing 10 ]
+        |> Element.layout
+            [ Font.family [ Font.serif ]
+            , Element.width Element.fill
+            , Background.color white
+            ]
 
 
 notificationView : String -> Element Msg
@@ -1051,19 +1066,7 @@ paragraph =
 
 viewOk : OkModel -> Element Msg
 viewOk model =
-    [ Element.text "Diet tracker"
-        |> Element.el
-            [ Font.size 30
-            , Region.heading 1
-            , Font.color mustard
-            ]
-    , Element.el
-        [ Element.width Element.fill
-        , Element.height (Element.px 2)
-        , Background.color mustard
-        ]
-        Element.none
-    , paragraph "This is a tool for tracking the numbers in a calorie-counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
+    [ paragraph "This is a tool for tracking the numbers in a calorie-counting diet. There is a database of foods, and inputs for adding new ones. There are inputs for meals, body weights and waist sizes, and charts for viewing the data."
     , paragraph "The data is kept locally and never shared with anyone else. It can be saved to a file for permanent storage. Clearing browser data will reset everything."
     , header "Amount eaten today"
     , paragraph "The total number of calories consumed today is:"
@@ -1148,7 +1151,7 @@ viewOk model =
     , header "Download data"
     , paragraph "Click this button to download all the data. It's a good idea to do this now and then in case the browser data is deleted."
     , Input.button
-        (Element.alignRight :: lessMoreStyle)
+        (Element.alignLeft :: lessMoreStyle)
         { onPress = Just DownloadData
         , label = Element.text "Download data"
         }
@@ -1156,7 +1159,7 @@ viewOk model =
     , header "Upload data"
     , paragraph "This button is for uploading a previously downloaded data file, and restoring the data in the tool to an earlier point. Note that this will overwrite the data currently in the tool."
     , Input.button
-        (Element.alignRight :: lessMoreStyle)
+        (Element.alignLeft :: lessMoreStyle)
         { onPress = Just UploadData
         , label = Element.text "Upload data"
         }
@@ -1183,6 +1186,8 @@ viewOk model =
             [ Element.spacing 15
             , Element.width (Element.maximum 700 Element.fill)
             , Element.centerX
+            , Element.paddingEach
+                { top = 0, bottom = 160, left = 20, right = 20 }
             ]
 
 
