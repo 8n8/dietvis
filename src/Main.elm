@@ -1753,15 +1753,12 @@ energyTodayView energy =
         |> Energy.toKcal
         |> String.fromInt
         |> Element.text
-        |> Element.el [ Font.size 30 ]
+        |> Element.el [ Font.bold ]
     , Element.text " kCal"
         |> Element.el [ normalFontSize ]
     ]
         |> Element.paragraph
             [ Font.color darkBrown ]
-        |> Element.el [ Element.centerX ]
-        |> Element.el
-            [ Element.width Element.fill ]
 
 
 viewFatalError : String -> Element Msg
