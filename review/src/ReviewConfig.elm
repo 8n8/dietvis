@@ -11,12 +11,10 @@ when inside the directory containing this file.
 
 -}
 
-import Review.Rule exposing (Rule)
 import NoBooleanCase
 import NoDebug.Log
-import NoDuplicatePorts
-import NoUnusedPorts
 import NoDeprecated
+import NoDuplicatePorts
 import NoExposingEverything
 import NoImportingEverything
 import NoMissingTypeAnnotation
@@ -28,6 +26,8 @@ import NoUnused.Modules
 import NoUnused.Parameters
 import NoUnused.Patterns
 import NoUnused.Variables
+import NoUnusedPorts
+import Review.Rule exposing (Rule)
 
 
 config : List Rule
