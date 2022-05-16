@@ -1123,7 +1123,7 @@ viewOk model =
          }
         )
     , header "Daily calories chart"
-    , paragraph "This chart shows the total calories recorded for each day, in kCal, compared to the first day."
+    , paragraph "This chart shows the total calories recorded for each day, in kCal, compared to the overall average."
     , dailyChartView
         (let
             data =
