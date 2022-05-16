@@ -8,9 +8,9 @@ module Foods exposing
     , search
     )
 
-import EnergyRate exposing (EnergyRate)
+import EnergyRate
 import Food exposing (Food)
-import FoodDescription exposing (FoodDescription)
+import FoodDescription
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Set

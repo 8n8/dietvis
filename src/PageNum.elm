@@ -52,14 +52,6 @@ isLastPage (PageNum p) =
     p.pageNum + 1 == p.totalPages
 
 
-{-| There is nothing special about this number. All it needs to be is
-less than integer overflow and more than there will be pages.
--}
-maxPageNum : Int
-maxPageNum =
-    1000000
-
-
 plus1 : PageNum -> Result String PageNum
 plus1 (PageNum p) =
     if p.pageNum + 1 == p.totalPages then

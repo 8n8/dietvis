@@ -7,7 +7,6 @@ module BodyWeightRecords exposing
     , insert
     )
 
-import Array exposing (Array)
 import BodyWeight exposing (BodyWeight)
 import Dict exposing (Dict)
 import Json.Decode as Decode exposing (Decoder)

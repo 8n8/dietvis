@@ -8,11 +8,8 @@ module Meals exposing
     , insert
     )
 
-import Array exposing (Array)
 import Dict exposing (Dict)
 import Energy exposing (Energy)
-import EnergyRate exposing (EnergyRate)
-import FoodMass exposing (FoodMass)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Meal exposing (Meal)

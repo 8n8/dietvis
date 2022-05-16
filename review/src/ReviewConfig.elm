@@ -20,7 +20,6 @@ import NoDeprecated
 import NoExposingEverything
 import NoImportingEverything
 import NoMissingTypeAnnotation
-import NoMissingTypeExpose
 import NoPrematureLetComputation
 import NoUnused.CustomTypeConstructors
 import NoUnused.Dependencies
@@ -41,7 +40,6 @@ config =
     , NoDeprecated.rule NoDeprecated.defaults
     , NoImportingEverything.rule []
     , NoMissingTypeAnnotation.rule
-    , NoMissingTypeExpose.rule
     , NoPrematureLetComputation.rule
     , NoUnused.CustomTypeConstructors.rule []
     , NoUnused.Dependencies.rule

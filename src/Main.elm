@@ -1,23 +1,23 @@
 port module Main exposing (main)
 
-import BodyWeight exposing (BodyWeight)
+import BodyWeight
 import BodyWeightRecords exposing (BodyWeightRecords)
 import Browser
 import Browser.Dom as Dom
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
-import Element.Font as Font exposing (Font)
+import Element.Font as Font
 import Element.Input as Input
 import Element.Region as Region
 import Energy exposing (Energy)
-import EnergyRate exposing (EnergyRate)
-import File as File exposing (File)
+import EnergyRate
+import File exposing (File)
 import File.Download as Download
 import File.Select as Select
 import Food exposing (Food)
-import FoodDescription exposing (FoodDescription)
-import FoodMass exposing (FoodMass)
+import FoodDescription
+import FoodMass
 import Foods exposing (Foods)
 import Html exposing (Html)
 import Html.Attributes
@@ -26,11 +26,10 @@ import Json.Encode as Encode
 import Meal exposing (Meal)
 import Meals exposing (Meals)
 import PageNum exposing (PageNum)
-import Process
 import Task
 import Time
 import Timestamp exposing (Timestamp)
-import WaistSize exposing (WaistSize)
+import WaistSize
 import WaistSizeRecords exposing (WaistSizeRecords)
 
 
@@ -213,6 +212,7 @@ decodeNonEmptyCache =
         (Decode.field "meals" Meals.decode)
 
 
+main : Program Decode.Value Model Msg
 main =
     Browser.element
         { init = init
@@ -225,7 +225,7 @@ main =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case model of
-        Fatal error ->
+        Fatal _ ->
             ( model, Cmd.none )
 
         LoadingZoneAndTime cache ->
@@ -607,7 +607,7 @@ updateOk msg model =
 
         FileLoaded raw ->
             case Decode.decodeString decodeNonEmptyCache raw of
-                Err err ->
+                Err _ ->
                     ( Ok_ { model | fileUploadStatus = BadFile }
                     , Cmd.none
                     )
@@ -1008,20 +1008,6 @@ view model =
             ]
 
 
-notificationView : String -> Element Msg
-notificationView msg =
-    if msg == "" then
-        Element.none
-
-    else
-        Element.text msg
-            |> Element.el
-                [ Background.color yellow
-                , Element.alignBottom
-                , Element.centerX
-                ]
-
-
 viewElement : Model -> Element Msg
 viewElement model =
     case model of
@@ -1397,6 +1383,7 @@ bodyWeightView bodyWeightBox notificationStatus =
             ]
 
 
+saveButton : NotificationStatus -> Msg -> Element Msg
 saveButton notificationStatus msg =
     { onPress = Just msg
     , label = Element.text "Save"
@@ -1531,25 +1518,7 @@ mealWeightBoxView contents =
             ]
 
 
-submitButtonStyle =
-    [ Element.padding 15
-    , Element.mouseOver [ Background.color whiteHover ]
-    , Border.solid
-    , Border.width 1
-    , Border.color darkBrown
-    , Border.rounded 3
-    ]
-
-
-submitMealButton : Element Msg
-submitMealButton =
-    Input.button
-        submitButtonStyle
-        { onPress = Just SubmitMeal
-        , label = Element.text "Record meal"
-        }
-
-
+normalFontSize : Element.Attribute Msg
 normalFontSize =
     Font.size 18
 
@@ -1585,6 +1554,7 @@ totalPages numResults =
     (toFloat numResults / toFloat foodResultsPerPage) |> ceiling
 
 
+foodSearch : Foods -> String -> List Food
 foodSearch customFoods query =
     if String.isEmpty query then
         []
@@ -1795,16 +1765,6 @@ mustard =
     Element.rgb255 185 119 32
 
 
-orange : Element.Color
-orange =
-    Element.rgb255 238 155 17
-
-
-beige : Element.Color
-beige =
-    Element.rgb255 242 200 158
-
-
 yellow : Element.Color
 yellow =
     Element.rgb255 255 176 63
@@ -1818,11 +1778,6 @@ blueLink =
 blueMountain : Element.Color
 blueMountain =
     Element.rgb255 137 180 214
-
-
-blueCloud : Element.Color
-blueCloud =
-    Element.rgb255 180 204 232
 
 
 bluePaleSky : Element.Color
