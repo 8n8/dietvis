@@ -1180,6 +1180,24 @@ viewOk model =
       , Element.text "."
       ]
         |> Element.paragraph [ normalFontSize, Font.color darkBrown ]
+    , [ Element.text "The "
+      , { url = "https://github.com/twitter/twemoji/blob/master/assets/svg/1f96a.svg"
+        , label = Element.text "sandwich icon"
+        }
+            |> Element.link [ Font.color blueLink ]
+      , Element.text " by "
+      , { url = "https://twemoji.twitter.com/"
+        , label = Element.text "Twemoji"
+        }
+            |> Element.link [ Font.color blueLink ]
+      , Element.text " is licensed under "
+      , { url = "https://creativecommons.org/licenses/by/4.0/"
+        , label = Element.text "CC BY 4.0"
+        }
+            |> Element.link [ Font.color blueLink ]
+      , Element.text "."
+      ]
+        |> Element.paragraph [ normalFontSize, Font.color darkBrown ]
     ]
         |> Element.column
             [ Element.spacing 15
