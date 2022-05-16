@@ -20,11 +20,8 @@ import NoDeprecated
 import NoExposingEverything
 import NoImportingEverything
 import NoMissingTypeAnnotation
-import NoMissingTypeAnnotationInLetIn
 import NoMissingTypeExpose
 import NoPrematureLetComputation
-import NoUnsortedRecordFields
-import NoUnsortedConstructors
 import NoUnused.CustomTypeConstructors
 import NoUnused.Dependencies
 import NoUnused.Exports
@@ -37,8 +34,6 @@ import NoUnused.Variables
 config : List Rule
 config =
     [ NoBooleanCase.rule
-    , NoUnsortedConstructors.rule
-    , NoUnsortedRecordFields.rule
     , NoDebug.Log.rule
     , NoDuplicatePorts.rule
     , NoUnusedPorts.rule
@@ -46,7 +41,6 @@ config =
     , NoDeprecated.rule NoDeprecated.defaults
     , NoImportingEverything.rule []
     , NoMissingTypeAnnotation.rule
-    , NoMissingTypeAnnotationInLetIn.rule
     , NoMissingTypeExpose.rule
     , NoPrematureLetComputation.rule
     , NoUnused.CustomTypeConstructors.rule []
