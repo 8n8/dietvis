@@ -1138,8 +1138,8 @@ viewOk model =
     , header "Record a waist size"
     , paragraph "This will record waist size and add it to the charts."
     , waistSizeView model.waistSizeBox model.waistSizeNotification
-    , header "Body weight chart"
-    , paragraph "This chart shows the average body weight for each day, in kilograms, compared to the overall average. A dash means that there was no weight recorded for that day. A brown bar means the weight was less than the average, and a blue bar means it was greater."
+    , header "Body weight history"
+    , paragraph "The average body weight for each day, in kilograms. A dash means that there was no weight recorded for that day."
     , dailyChartView
         (let
             data =
@@ -1157,8 +1157,8 @@ viewOk model =
          , toString = bodyToString
          }
         )
-    , header "Waist size chart"
-    , paragraph "This chart shows the average waist size for each day, in centimeters, compared to the overall average."
+    , header "Waist size history"
+    , paragraph "The average waist size for each day, in centimeters."
     , dailyChartView
         (let
             data =
@@ -1176,8 +1176,8 @@ viewOk model =
          , toString = bodyToString
          }
         )
-    , header "Daily calories chart"
-    , paragraph "This chart shows the total calories recorded for each day, in kCal, compared to the overall average."
+    , header "Daily calories history"
+    , paragraph "The total calories recorded for each day, in kCal."
     , dailyChartView
         (let
             data =
