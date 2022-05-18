@@ -70,6 +70,8 @@ type Msg
     | SelectedFile File
     | FileLoaded String
     | SelectedFoodPosition (Result Dom.Error Dom.Element)
+    | UndoDelete NonEmptyCache
+    | DeleteData
 
 
 port toLocalStorage : String -> Cmd msg
@@ -163,6 +165,7 @@ type alias OkModel =
     , mealsPage : PageNum
     , now : Timestamp
     , zone : Time.Zone
+    , undo : Maybe NonEmptyCache
     }
 
 
@@ -332,6 +335,12 @@ updateLoadingTime cache zone msg =
         NoOp ->
             nothing
 
+        UndoDelete _ ->
+            nothing
+
+        DeleteData ->
+            nothing
+
 
 initModelHelp : Cache -> Time.Zone -> Timestamp -> OkModel
 initModelHelp cache zone now =
@@ -381,6 +390,7 @@ initModelHelp cache zone now =
     , foodNotification = Off
     , bodyWeightNotification = Off
     , waistSizeNotification = Off
+    , undo = Nothing
     }
 
 
@@ -475,6 +485,12 @@ updateLoadingZone cache timestamp msg =
         NoOp ->
             nothing
 
+        UndoDelete _ ->
+            nothing
+
+        DeleteData ->
+            nothing
+
 
 updateLoadingZoneAndTime : Cache -> Msg -> ( Model, Cmd Msg )
 updateLoadingZoneAndTime cache msg =
@@ -565,6 +581,12 @@ updateLoadingZoneAndTime cache msg =
             nothing
 
         NoOp ->
+            nothing
+
+        UndoDelete _ ->
+            nothing
+
+        DeleteData ->
             nothing
 
 
@@ -901,6 +923,38 @@ updateOk msg model =
         NoOp ->
             ( Ok_ model, Cmd.none )
 
+        UndoDelete { customFoods, bodyWeightRecords, waistSizeRecords, meals } ->
+            let
+                newModel =
+                    { model
+                        | customFoods = customFoods
+                        , bodyWeightRecords = bodyWeightRecords
+                        , waistSizeRecords = waistSizeRecords
+                        , meals = meals
+                        , undo = Nothing
+                    }
+            in
+            ( Ok_ newModel, dumpCache newModel )
+
+        DeleteData ->
+            let
+                newModel =
+                    { model
+                        | customFoods = Foods.empty
+                        , bodyWeightRecords = BodyWeightRecords.empty
+                        , waistSizeRecords = WaistSizeRecords.empty
+                        , meals = Meals.empty
+                        , undo =
+                            { customFoods = model.customFoods
+                            , bodyWeightRecords = model.bodyWeightRecords
+                            , waistSizeRecords = model.waistSizeRecords
+                            , meals = model.meals
+                            }
+                                |> Just
+                    }
+            in
+            ( Ok_ newModel, dumpCache newModel )
+
 
 type alias RawFood =
     { description : String
@@ -1161,6 +1215,26 @@ viewOk model =
         (Element.alignLeft :: lessMoreStyle)
         { onPress = Just UploadData
         , label = Element.text "Upload data"
+        }
+        |> Element.el [ Element.width Element.fill ]
+    , header "Delete all the data"
+    , paragraph "This button is for deleting all the data in the app."
+    , Input.button
+        (Element.alignLeft :: lessMoreStyle)
+        { onPress =
+            case model.undo of
+                Nothing ->
+                    Just DeleteData
+
+                Just previousData ->
+                    Just (UndoDelete previousData)
+        , label =
+            case model.undo of
+                Nothing ->
+                    Element.text "Delete data"
+
+                Just _ ->
+                    Element.text "Undo delete"
         }
         |> Element.el [ Element.width Element.fill ]
     , header "About this tool"
