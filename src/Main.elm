@@ -736,6 +736,7 @@ updateOk msg model =
                                                 meal
                                                 model.meals
                                         , mealNotification = On
+                                        , mealWeightBox = ""
                                     }
                             in
                             ( Ok_ newModel
@@ -760,6 +761,8 @@ updateOk msg model =
                                     Foods.insert
                                         food
                                         model.customFoods
+                                , newFoodDescriptionBox = ""
+                                , newFoodEnergyBox = ""
                                 , foodNotification = On
                             }
                     in
@@ -806,6 +809,7 @@ updateOk msg model =
                                         bodyWeight
                                         model.bodyWeightRecords
                                 , bodyWeightNotification = On
+                                , bodyWeightBox = ""
                             }
                     in
                     ( Ok_ newModel, dumpCache newModel )
@@ -837,6 +841,7 @@ updateOk msg model =
                                         waistSize
                                         model.waistSizeRecords
                                 , waistSizeNotification = On
+                                , waistSizeBox = ""
                             }
                     in
                     ( Ok_ newModel, dumpCache newModel )
