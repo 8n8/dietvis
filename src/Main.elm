@@ -4,7 +4,6 @@ import BodyWeight
 import BodyWeightRecords exposing (BodyWeightRecords)
 import Browser
 import Browser.Dom as Dom
-import Set
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
@@ -27,6 +26,7 @@ import Json.Encode as Encode
 import Meal exposing (Meal)
 import Meals exposing (Meals)
 import PageNum exposing (PageNum)
+import Set
 import Task
 import Time
 import Timestamp exposing (Timestamp)
@@ -217,7 +217,8 @@ decodeNonEmptyCache =
         (Decode.field "waistSizeRecords" WaistSizeRecords.decode)
         (Decode.field "meals" Meals.decode)
         (Decode.maybe (Decode.field "popularFoods" Foods.decode)
-            |> Decode.map (Maybe.withDefault Foods.empty))
+            |> Decode.map (Maybe.withDefault Foods.empty)
+        )
 
 
 main : Program Decode.Value Model Msg
@@ -401,7 +402,7 @@ initModelHelp cache zone now =
             Empty ->
                 Foods.empty
 
-            NonEmpty {popularFoods} ->
+            NonEmpty { popularFoods } ->
                 popularFoods
     }
 
@@ -1683,7 +1684,7 @@ foodSearch popular customFoods query =
                     popularMatches
                     (Foods.search query customFoods)
 
-            popularMatches : List Food 
+            popularMatches : List Food
             popularMatches =
                 Foods.search query popular
 
@@ -1696,16 +1697,23 @@ foodSearch popular customFoods query =
         popularMatches ++ customMatches ++ builtInMatches
 
 
-{-| It removes things in the first list from the second list. -}
+{-| It removes things in the first list from the second list.
+-}
 removeFoods : List Food -> List Food -> List Food
 removeFoods remove from =
     let
         serialize : Food -> String
         serialize food =
             Encode.encode 0 (Food.encode food)
-        removeSet = List.map serialize remove |> Set.fromList
-        fromSet = List.map serialize from |> Set.fromList
-        removed = Set.diff fromSet removeSet
+
+        removeSet =
+            List.map serialize remove |> Set.fromList
+
+        fromSet =
+            List.map serialize from |> Set.fromList
+
+        removed =
+            Set.diff fromSet removeSet
     in
     List.filter (\f -> Set.member (serialize f) removed) from
 
