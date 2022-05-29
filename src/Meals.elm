@@ -6,6 +6,7 @@ module Meals exposing
     , encode
     , energyToday
     , insert
+    , toList
     )
 
 import Dict exposing (Dict)
@@ -19,6 +20,11 @@ import Timestamp exposing (Timestamp)
 
 type Meals
     = Meals (List Meal)
+
+
+toList : Meals -> List Meal
+toList (Meals meals) =
+    meals
 
 
 energyToday : Meals -> Timestamp -> Time.Zone -> Energy

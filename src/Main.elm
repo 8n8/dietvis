@@ -4,6 +4,7 @@ import BodyWeight
 import BodyWeightRecords exposing (BodyWeightRecords)
 import Browser
 import Browser.Dom as Dom
+import Set
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
@@ -166,6 +167,7 @@ type alias OkModel =
     , now : Timestamp
     , zone : Time.Zone
     , undo : Maybe NonEmptyCache
+    , popularFoods : Foods
     }
 
 
@@ -184,6 +186,7 @@ type alias NonEmptyCache =
     , bodyWeightRecords : BodyWeightRecords
     , waistSizeRecords : WaistSizeRecords
     , meals : Meals
+    , popularFoods : Foods
     }
 
 
@@ -208,11 +211,13 @@ decodeCache =
 
 decodeNonEmptyCache : Decoder NonEmptyCache
 decodeNonEmptyCache =
-    Decode.map4 NonEmptyCache
+    Decode.map5 NonEmptyCache
         (Decode.field "customFoods" Foods.decode)
         (Decode.field "bodyWeightRecords" BodyWeightRecords.decode)
         (Decode.field "waistSizeRecords" WaistSizeRecords.decode)
         (Decode.field "meals" Meals.decode)
+        (Decode.maybe (Decode.field "popularFoods" Foods.decode)
+            |> Decode.map (Maybe.withDefault Foods.empty))
 
 
 main : Program Decode.Value Model Msg
@@ -391,6 +396,13 @@ initModelHelp cache zone now =
     , bodyWeightNotification = Off
     , waistSizeNotification = Off
     , undo = Nothing
+    , popularFoods =
+        case cache of
+            Empty ->
+                Foods.empty
+
+            NonEmpty {popularFoods} ->
+                popularFoods
     }
 
 
@@ -596,13 +608,14 @@ dumpCache =
 
 
 encodeCache : OkModel -> String
-encodeCache { customFoods, bodyWeightRecords, waistSizeRecords, meals } =
+encodeCache { customFoods, bodyWeightRecords, waistSizeRecords, meals, popularFoods } =
     [ ( "customFoods", Foods.encode customFoods )
     , ( "bodyWeightRecords"
       , BodyWeightRecords.encode bodyWeightRecords
       )
     , ( "waistSizeRecords", WaistSizeRecords.encode waistSizeRecords )
     , ( "meals", Meals.encode meals )
+    , ( "popularFoods", Foods.encode popularFoods )
     ]
         |> Encode.object
         |> Encode.encode 4
@@ -650,7 +663,7 @@ updateOk msg model =
             let
                 pageNumR : Result String PageNum
                 pageNumR =
-                    foodSearch model.customFoods query
+                    foodSearch model.popularFoods model.customFoods query
                         |> List.length
                         |> totalPages
                         |> PageNum.first
@@ -735,6 +748,10 @@ updateOk msg model =
                                             Meals.insert
                                                 meal
                                                 model.meals
+                                        , popularFoods =
+                                            Foods.insert
+                                                selectedFood
+                                                model.popularFoods
                                         , mealNotification = On
                                         , mealWeightBox = ""
                                     }
@@ -954,6 +971,7 @@ updateOk msg model =
                             , bodyWeightRecords = model.bodyWeightRecords
                             , waistSizeRecords = model.waistSizeRecords
                             , meals = model.meals
+                            , popularFoods = model.popularFoods
                             }
                                 |> Just
                     }
@@ -1124,6 +1142,7 @@ viewOk model =
             ]
     , paragraph "To record a meal, first find the food by typing in the search box. Then enter the weight of the meal. If the food is not in the list, make a new one in the next section."
     , foodSearchView
+        model.popularFoods
         model.customFoods
         model.foodSearchBox
         model.foodSearchResultsPage
@@ -1651,8 +1670,8 @@ totalPages numResults =
     (toFloat numResults / toFloat foodResultsPerPage) |> ceiling
 
 
-foodSearch : Foods -> String -> List Food
-foodSearch customFoods query =
+foodSearch : Foods -> Foods -> String -> List Food
+foodSearch popular customFoods query =
     if String.isEmpty query then
         []
 
@@ -1660,21 +1679,43 @@ foodSearch customFoods query =
         let
             customMatches : List Food
             customMatches =
-                Foods.search query customFoods
+                removeFoods
+                    popularMatches
+                    (Foods.search query customFoods)
+
+            popularMatches : List Food 
+            popularMatches =
+                Foods.search query popular
 
             builtInMatches : List Food
             builtInMatches =
-                Foods.search query Foods.builtIns
+                removeFoods
+                    popularMatches
+                    (Foods.search query Foods.builtIns)
         in
         customMatches ++ builtInMatches
 
 
-foodSearchView : Foods -> String -> PageNum -> Element Msg
-foodSearchView customFoods searchBox pageNum =
+{-| It removes things in the first list from the second list. -}
+removeFoods : List Food -> List Food -> List Food
+removeFoods remove from =
+    let
+        serialize : Food -> String
+        serialize food =
+            Encode.encode 0 (Food.encode food)
+        removeSet = List.map serialize remove |> Set.fromList
+        fromSet = List.map serialize from |> Set.fromList
+        removed = Set.diff fromSet removeSet
+    in
+    List.filter (\f -> Set.member (serialize f) removed) from
+
+
+foodSearchView : Foods -> Foods -> String -> PageNum -> Element Msg
+foodSearchView popularFoods customFoods searchBox pageNum =
     let
         matches : List Food
         matches =
-            foodSearch customFoods searchBox
+            foodSearch popularFoods customFoods searchBox
                 |> List.take (PageNum.pageNum pageNum * foodResultsPerPage)
     in
     Element.column
