@@ -1693,7 +1693,7 @@ foodSearch popular customFoods query =
                     popularMatches
                     (Foods.search query Foods.builtIns)
         in
-        customMatches ++ builtInMatches
+        popularMatches ++ customMatches ++ builtInMatches
 
 
 {-| It removes things in the first list from the second list. -}
